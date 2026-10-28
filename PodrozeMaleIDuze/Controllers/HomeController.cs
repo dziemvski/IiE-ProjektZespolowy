@@ -15,6 +15,25 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        ViewData["Tytul"] = "Podró¿e Ma³e i Du¿e";
+        ViewData["Opis"] = "Odkrywaj miejsca, które warto zobaczyæ.";
+        return View();
+    }
+
+    public IActionResult Travel()
+    {
+        var podroze = new List<string>
+        {
+            "Tatry – górskie wêdrówki",
+            "Gdañsk – weekend nad morzem",
+            "Praga – city break",
+            "Rzym – historia i zabytki"
+        };
+        return View();
+    }
+
+    public IActionResult Kontakt()
+    {
         return View();
     }
 
