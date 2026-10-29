@@ -1,5 +1,14 @@
+:root {
+  --green-900: #1b5e20;
+  --green-700: #2e7d32;
+  --green-500: #43a047;
+  --green-100: #e8f5e9;
+}
+
 html {
   font-size: 14px;
+  position: relative;
+  min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -8,24 +17,116 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  margin-bottom: 60px;
+  font-family: 'Lato', sans-serif;
+  background: #ffffff;
+  color: #263238;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin-bottom: 0;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+main {
+  flex: 1;
+  padding-top: 1.5rem;
+}
+
+/* focus w kolorze motywu zamiast niebieskiego */
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus,
+.form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--green-500);
+}
+
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
   text-align: end;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+/* nawigacja */
+.app-navbar {
+  background: #ffffff;
+  border-bottom: 3px solid var(--green-500);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.brand-name {
+  color: var(--green-700);
+  font-weight: 700;
+}
+
+.logo-placeholder {
+  width: 44px;
+  height: 44px;
+  margin-right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--green-500);
+  border-radius: 8px;
+  color: var(--green-500);
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.app-navbar .nav-link {
+  color: var(--green-700);
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.5rem 0.9rem;
+  margin: 0 2px;
+}
+
+.app-navbar .nav-link:hover {
+  background: var(--green-100);
+  color: var(--green-900);
+}
+
+.app-navbar .nav-link.active {
+  background: var(--green-700);
+  color: #ffffff;
+}
+
+.app-navbar .nav-login {
+  border: 1px solid var(--green-700);
+}
+
+/* przyciski i linki w motywie zielonym */
+.btn-primary {
+  background-color: var(--green-700);
+  border-color: var(--green-700);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--green-900);
+  border-color: var(--green-900);
+}
+
+a { color: var(--green-700); }
+a:hover { color: var(--green-900); }
+
+h2 { color: var(--green-900); }
+
+/* tymczasowe widoki */
+.page-placeholder {
+  background: var(--green-100);
+  border-left: 6px solid var(--green-500);
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+/* stopka */
+.app-footer {
+  background: var(--green-100);
+  border-top: 1px solid var(--green-500);
+  color: var(--green-900);
+  padding: 1rem 0;
+  font-size: 0.9rem;
 }
