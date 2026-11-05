@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    container_name: podroze-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-podroze}
+      POSTGRES_USER: ${DB_USER:-podroze}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Ustaw DB_PASSWORD w pliku .env}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
