@@ -9,3 +9,13 @@ bin/
 obj/
 
 .ai/
+# Pliki użytkownika IDE
+*.user
+
+# Sekrety i lokalna konfiguracja
+.env
+appsettings.Local.json
+
+# Pliki wgrywane przez użytkowników (zostaje tylko .gitkeep)
+PodrozeMaleIDuze/wwwroot/uploads/*
+!PodrozeMaleIDuze/wwwroot/uploads/.gitkeep
