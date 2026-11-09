@@ -94,5 +94,15 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(p => p.TripPlaces)
             .HasForeignKey(tp => tp.PlaceId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Promotion>()
+            .Property(p => p.Price)
+            .HasPrecision(10, 2);
+
+        builder.Entity<Promotion>()
+            .HasOne(pr => pr.Place)
+            .WithMany(p => p.Promotions)
+            .HasForeignKey(pr => pr.PlaceId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
