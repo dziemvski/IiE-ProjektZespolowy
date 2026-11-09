@@ -25,8 +25,8 @@ public class Place
 
     [Required] public string CreatedByUserId { get; set; } = string.Empty;
     public ApplicationUser CreatedByUser { get; set; } = null!;
-
     public ICollection<PlaceImage> Images { get; set; } = new List<PlaceImage>();
     public ICollection<SavedPlace> SavedBy { get; set; } = new List<SavedPlace>();
     public ICollection<TripPlace> TripPlaces { get; set; } = new List<TripPlace>();
+    public ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();
 }

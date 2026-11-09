@@ -360,6 +360,33 @@ namespace PodrozeMaleIDuze.Migrations
                     b.ToTable("PlaceImage");
                 });
 
+            modelBuilder.Entity("PodrozeMaleIDuze.Models.Promotion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlaceId");
+
+                    b.ToTable("Promotion");
+                });
+
             modelBuilder.Entity("PodrozeMaleIDuze.Models.SavedPlace", b =>
                 {
                     b.Property<string>("UserId")
@@ -538,6 +565,17 @@ namespace PodrozeMaleIDuze.Migrations
                     b.Navigation("Place");
                 });
 
+            modelBuilder.Entity("PodrozeMaleIDuze.Models.Promotion", b =>
+                {
+                    b.HasOne("PodrozeMaleIDuze.Models.Place", "Place")
+                        .WithMany("Promotions")
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+                });
+
             modelBuilder.Entity("PodrozeMaleIDuze.Models.SavedPlace", b =>
                 {
                     b.HasOne("PodrozeMaleIDuze.Models.Place", "Place")
@@ -611,6 +649,8 @@ namespace PodrozeMaleIDuze.Migrations
             modelBuilder.Entity("PodrozeMaleIDuze.Models.Place", b =>
                 {
                     b.Navigation("Images");
+
+                    b.Navigation("Promotions");
 
                     b.Navigation("SavedBy");
 
