@@ -30,5 +30,33 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<City>()
             .HasIndex(c => new { c.Name, c.Region })
             .IsUnique();
+
+        builder.Entity<Category>()
+            .HasIndex(c => c.Name)
+            .IsUnique();
+
+        builder.Entity<Place>()
+            .HasOne(p => p.City)
+            .WithMany(c => c.Places)
+            .HasForeignKey(p => p.CityId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Place>()
+            .HasOne(p => p.Category)
+            .WithMany(c => c.Places)
+            .HasForeignKey(p => p.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Place>()
+            .HasOne(p => p.CreatedByUser)
+            .WithMany(u => u.CreatedPlaces)
+            .HasForeignKey(p => p.CreatedByUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<PlaceImage>()
+            .HasOne(i => i.Place)
+            .WithMany(p => p.Images)
+            .HasForeignKey(i => i.PlaceId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

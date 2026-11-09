@@ -13,4 +13,6 @@ public class ApplicationUser : IdentityUser
 
     public int? ManagedCityId { get; set; }
     public City? ManagedCity { get; set; }
+    
+    public ICollection<Place> CreatedPlaces { get; set; } = new List<Place>();
 }

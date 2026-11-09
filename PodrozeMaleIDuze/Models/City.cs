@@ -15,4 +15,6 @@ public class City
     public string Region { get; set; } = string.Empty;
 
     public ICollection<ApplicationUser> Admins { get; set; } = new List<ApplicationUser>();
+    
+    public ICollection<Place> Places { get; set; } = new List<Place>();
 }
