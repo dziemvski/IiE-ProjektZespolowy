@@ -11,6 +11,13 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     }
 
     public DbSet<City> Cities { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Place> Places { get; set; }
+    public DbSet<PlaceImage> PlaceImages { get; set; }
+    public DbSet<SavedPlace> SavedPlaces { get; set; }
+    public DbSet<Trip> Trips { get; set; }
+    public DbSet<TripPlace> TripPlaces { get; set; }
+    public DbSet<Promotion> Promotions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

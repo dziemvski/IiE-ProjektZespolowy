@@ -250,7 +250,7 @@ namespace PodrozeMaleIDuze.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("PodrozeMaleIDuze.Models.City", b =>
@@ -326,7 +326,7 @@ namespace PodrozeMaleIDuze.Migrations
 
                     b.HasIndex("CreatedByUserId");
 
-                    b.ToTable("Place");
+                    b.ToTable("Places");
                 });
 
             modelBuilder.Entity("PodrozeMaleIDuze.Models.PlaceImage", b =>
@@ -357,7 +357,7 @@ namespace PodrozeMaleIDuze.Migrations
 
                     b.HasIndex("PlaceId");
 
-                    b.ToTable("PlaceImage");
+                    b.ToTable("PlaceImages");
                 });
 
             modelBuilder.Entity("PodrozeMaleIDuze.Models.Promotion", b =>
@@ -375,7 +375,8 @@ namespace PodrozeMaleIDuze.Migrations
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)");
 
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
@@ -384,7 +385,7 @@ namespace PodrozeMaleIDuze.Migrations
 
                     b.HasIndex("PlaceId");
 
-                    b.ToTable("Promotion");
+                    b.ToTable("Promotions");
                 });
 
             modelBuilder.Entity("PodrozeMaleIDuze.Models.SavedPlace", b =>
@@ -408,7 +409,7 @@ namespace PodrozeMaleIDuze.Migrations
 
                     b.HasIndex("PlaceId");
 
-                    b.ToTable("SavedPlace");
+                    b.ToTable("SavedPlaces");
                 });
 
             modelBuilder.Entity("PodrozeMaleIDuze.Models.Trip", b =>
@@ -445,7 +446,7 @@ namespace PodrozeMaleIDuze.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Trip");
+                    b.ToTable("Trips");
                 });
 
             modelBuilder.Entity("PodrozeMaleIDuze.Models.TripPlace", b =>
@@ -463,7 +464,7 @@ namespace PodrozeMaleIDuze.Migrations
 
                     b.HasIndex("PlaceId");
 
-                    b.ToTable("TripPlace");
+                    b.ToTable("TripPlaces");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
