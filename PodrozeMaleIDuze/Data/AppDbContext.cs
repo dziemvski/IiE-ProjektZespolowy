@@ -58,5 +58,41 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(p => p.Images)
             .HasForeignKey(i => i.PlaceId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<SavedPlace>()
+            .HasKey(sp => new { sp.UserId, sp.PlaceId });
+
+        builder.Entity<SavedPlace>()
+            .HasOne(sp => sp.User)
+            .WithMany(u => u.SavedPlaces)
+            .HasForeignKey(sp => sp.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<SavedPlace>()
+            .HasOne(sp => sp.Place)
+            .WithMany(p => p.SavedBy)
+            .HasForeignKey(sp => sp.PlaceId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Trip>()
+            .HasOne(t => t.User)
+            .WithMany(u => u.Trips)
+            .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<TripPlace>()
+            .HasKey(tp => new { tp.TripId, tp.PlaceId });
+
+        builder.Entity<TripPlace>()
+            .HasOne(tp => tp.Trip)
+            .WithMany(t => t.TripPlaces)
+            .HasForeignKey(tp => tp.TripId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<TripPlace>()
+            .HasOne(tp => tp.Place)
+            .WithMany(p => p.TripPlaces)
+            .HasForeignKey(tp => tp.PlaceId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

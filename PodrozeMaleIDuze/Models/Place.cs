@@ -6,18 +6,13 @@ public class Place
 {
     public int Id { get; set; }
 
-    [Required]
-    [MaxLength(100)]
-    public string Name { get; set; } = string.Empty;
+    [Required] [MaxLength(100)] public string Name { get; set; } = string.Empty;
 
-    [MaxLength(1000)]
-    public string? Description { get; set; }
+    [MaxLength(1000)] public string? Description { get; set; }
 
-    [Range(-90, 90)]
-    public double Latitude { get; set; }
+    [Range(-90, 90)] public double Latitude { get; set; }
 
-    [Range(-180, 180)]
-    public double Longitude { get; set; }
+    [Range(-180, 180)] public double Longitude { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
@@ -28,9 +23,10 @@ public class Place
     public int CategoryId { get; set; }
     public Category Category { get; set; } = null!;
 
-    [Required]
-    public string CreatedByUserId { get; set; } = string.Empty;
+    [Required] public string CreatedByUserId { get; set; } = string.Empty;
     public ApplicationUser CreatedByUser { get; set; } = null!;
 
     public ICollection<PlaceImage> Images { get; set; } = new List<PlaceImage>();
-    }
+    public ICollection<SavedPlace> SavedBy { get; set; } = new List<SavedPlace>();
+    public ICollection<TripPlace> TripPlaces { get; set; } = new List<TripPlace>();
+}
