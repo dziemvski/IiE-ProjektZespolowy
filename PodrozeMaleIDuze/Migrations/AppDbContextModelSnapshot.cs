@@ -360,6 +360,85 @@ namespace PodrozeMaleIDuze.Migrations
                     b.ToTable("PlaceImage");
                 });
 
+            modelBuilder.Entity("PodrozeMaleIDuze.Models.SavedPlace", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsVisited")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("SavedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("VisitedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("UserId", "PlaceId");
+
+                    b.HasIndex("PlaceId");
+
+                    b.ToTable("SavedPlace");
+                });
+
+            modelBuilder.Entity("PodrozeMaleIDuze.Models.Trip", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Trip");
+                });
+
+            modelBuilder.Entity("PodrozeMaleIDuze.Models.TripPlace", b =>
+                {
+                    b.Property<int>("TripId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrderNumber")
+                        .HasColumnType("integer");
+
+                    b.HasKey("TripId", "PlaceId");
+
+                    b.HasIndex("PlaceId");
+
+                    b.ToTable("TripPlace");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -459,9 +538,62 @@ namespace PodrozeMaleIDuze.Migrations
                     b.Navigation("Place");
                 });
 
+            modelBuilder.Entity("PodrozeMaleIDuze.Models.SavedPlace", b =>
+                {
+                    b.HasOne("PodrozeMaleIDuze.Models.Place", "Place")
+                        .WithMany("SavedBy")
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PodrozeMaleIDuze.Models.ApplicationUser", "User")
+                        .WithMany("SavedPlaces")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PodrozeMaleIDuze.Models.Trip", b =>
+                {
+                    b.HasOne("PodrozeMaleIDuze.Models.ApplicationUser", "User")
+                        .WithMany("Trips")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PodrozeMaleIDuze.Models.TripPlace", b =>
+                {
+                    b.HasOne("PodrozeMaleIDuze.Models.Place", "Place")
+                        .WithMany("TripPlaces")
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PodrozeMaleIDuze.Models.Trip", "Trip")
+                        .WithMany("TripPlaces")
+                        .HasForeignKey("TripId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("Trip");
+                });
+
             modelBuilder.Entity("PodrozeMaleIDuze.Models.ApplicationUser", b =>
                 {
                     b.Navigation("CreatedPlaces");
+
+                    b.Navigation("SavedPlaces");
+
+                    b.Navigation("Trips");
                 });
 
             modelBuilder.Entity("PodrozeMaleIDuze.Models.Category", b =>
@@ -479,6 +611,15 @@ namespace PodrozeMaleIDuze.Migrations
             modelBuilder.Entity("PodrozeMaleIDuze.Models.Place", b =>
                 {
                     b.Navigation("Images");
+
+                    b.Navigation("SavedBy");
+
+                    b.Navigation("TripPlaces");
+                });
+
+            modelBuilder.Entity("PodrozeMaleIDuze.Models.Trip", b =>
+                {
+                    b.Navigation("TripPlaces");
                 });
 #pragma warning restore 612, 618
         }
