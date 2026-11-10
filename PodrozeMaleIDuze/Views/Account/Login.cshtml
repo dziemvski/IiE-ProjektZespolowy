@@ -1,177 +1,10 @@
 ﻿@model PodrozeMaleIDuze.Models.LoginViewModel
 @{
     ViewData["Title"] = "Logowanie";
-    // Odkomentuj poniższą linię, jeśli stosujesz domyślny układ stron z _Layout.cshtml
-    Layout = "_Layout";
+    Layout = "~/Views/Shared/_LayoutAlt.cshtml"; // Odwołujesz się do dedykowanego layoutu
 }
 
-<style>
-  :root {
-    --bg: #F7F5F0; --ink: #1C2321; --muted: #7B7F7C;
-    --rose: #B89C9C; --peach: #F8B97A; --line: #E6E1D8; --err: #C2604F;
-    --ease: cubic-bezier(.22, .9, .3, 1);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg); color: var(--ink);
-    font-family: "Inter Tight", system-ui, sans-serif; -webkit-font-smoothing: antialiased;
-    min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden;
-  }
-  a { color: inherit; text-decoration: none; }
-
-  /* HEADER */
-  .header {
-    position: fixed; inset: 0 0 auto 0; z-index: 50;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 22px clamp(16px, 4vw, 48px);
-  }
-  .logo { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; letter-spacing: -.01em; }
-  .logo svg { width: 30px; height: 30px; transition: transform .5s var(--ease); }
-  .logo:hover svg { transform: rotate(-20deg); }
-  .nav-btn {
-    display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500;
-    padding: 8px 8px 8px 16px; border-radius: 999px; border: 1px solid transparent;
-    transition: border-color .25s var(--ease), background .25s var(--ease);
-  }
-  .nav-btn:hover { border-color: var(--line); background: rgba(255,255,255,.6); }
-  .nav-btn .ico { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--peach); transition: background .25s var(--ease); }
-  .nav-btn:hover .ico { background: var(--peach); }
-  .nav-btn .ico svg { width: 15px; height: 15px; stroke: var(--ink); }
-
-  /* LOGOWANIE */
-  .auth { flex: 1; display: grid; place-items: center; position: relative; padding: 120px 16px 60px; }
-  #bgGlobe {
-    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-    width: min(900px, 130vw); aspect-ratio: 1; opacity: .5; pointer-events: none;
-  }
-  .card {
-    position: relative; width: min(420px, 100%);
-    background: rgba(255,255,255,.78);
-    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    border: 1px solid var(--line); border-radius: 26px;
-    padding: clamp(28px, 5vw, 40px);
-    opacity: 0; transform: translateY(18px);
-    animation: up .7s .1s var(--ease) forwards;
-  }
-  @@keyframes up { to { opacity: 1; transform: none; } }
-  .card .eyebrow { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-  .card h1 { font-size: 34px; font-weight: 600; letter-spacing: -.035em; line-height: 1.05; margin-bottom: 8px; }
-  .card h1 em { font-style: normal; color: var(--rose); }
-  .card .lead { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
-
-  .field { margin-bottom: 16px; }
-  .field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 7px; }
-  .input {
-    position: relative; display: flex; align-items: center;
-    border: 1px solid var(--line); border-radius: 14px; background: #fff;
-    transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
-  }
-  .input:focus-within { border-color: var(--peach); box-shadow: 0 0 0 4px rgba(248,185,122,.18); }
-  .input.invalid { border-color: var(--err); box-shadow: 0 0 0 4px rgba(194,96,79,.1); }
-  .input svg.lead-ico { width: 17px; height: 17px; margin-left: 14px; stroke: var(--muted); flex: none; }
-  .input input {
-    flex: 1; min-width: 0; border: 0; outline: 0; background: transparent;
-    font: inherit; font-size: 15px; color: var(--ink); padding: 13px 14px 13px 10px;
-  }
-  .input input::placeholder { color: #A9ADAA; }
-  .eye { background: none; border: 0; cursor: pointer; padding: 0 14px; height: 46px; display: grid; place-items: center; color: var(--muted); }
-  .eye svg { width: 18px; height: 18px; stroke: currentColor; }
-  .eye:hover { color: var(--ink); }
-  .field-validation-error { font-size: 12px; color: var(--err); margin-top: 6px; display: block; }
-
-  .row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin: 4px 0 24px; }
-  .check { display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--muted); }
-  .check input { appearance: none; width: 17px; height: 17px; border: 1px solid var(--line); border-radius: 5px; background: #fff; display: grid; place-items: center; cursor: pointer; transition: background .2s, border-color .2s; }
-  .check input:checked { background: var(--ink); border-color: var(--ink); }
-  .check input:checked::after { content: ""; width: 8px; height: 4px; border: solid #fff; border-width: 0 0 1.6px 1.6px; transform: rotate(-45deg) translate(1px, -1px); }
-  .row a { color: var(--ink); border-bottom: 1px solid transparent; transition: border-color .2s; }
-  .row a:hover { border-color: var(--ink); }
-
-  .submit {
-    width: 100%; border: 0; cursor: pointer; font: inherit; font-size: 15px; font-weight: 600;
-    color: var(--bg); background: var(--ink); border-radius: 14px; padding: 14px;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    transition: transform .2s var(--ease), background .25s var(--ease);
-  }
-  .submit:hover { background: #2C3532; }
-  .submit:active { transform: scale(.985); }
-  .submit svg { width: 16px; height: 16px; stroke: currentColor; transition: transform .3s var(--ease); }
-  .submit:hover svg { transform: translateX(3px); }
-
-  .notice-error { font-size: 13px; text-align: center; color: var(--err); margin-bottom: 14px; }
-  .notice-error ul { list-style: none; padding: 0; margin: 0; }
-  .divider { height: 1px; background: var(--line); margin: 24px 0 18px; }
-  .switch { font-size: 14px; text-align: center; color: var(--muted); }
-  .switch a { color: var(--ink); font-weight: 600; border-bottom: 1px solid var(--peach); }
-
-  /* STOPKA & POLITYKA PRYWATNOŚCI */
-  .footer { border-top: 1px solid var(--line); margin-top: 40px; }
-  .footer-bar {
-    max-width: 1240px; margin: 0 auto;
-    display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
-    padding: 26px clamp(16px, 4vw, 48px);
-    font-size: 13px; color: var(--muted);
-  }
-  .footer-bar .brand { display: flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 600; }
-  .footer-bar .brand svg { width: 20px; height: 20px; transition: transform .5s var(--ease); }
-  .footer-bar .brand:hover svg { transform: rotate(-20deg); }
-  .privacy-btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    font: inherit; font-weight: 500; color: var(--ink);
-    background: none; border: 1px solid var(--line); border-radius: 999px;
-    padding: 8px 14px; cursor: pointer;
-    transition: border-color .25s var(--ease), background .25s var(--ease);
-  }
-  .privacy-btn:hover { border-color: var(--peach); background: rgba(255,255,255,.6); }
-  .privacy-btn .chev { width: 12px; height: 12px; transition: transform .45s var(--ease); }
-  .privacy-btn[aria-expanded="true"] { border-color: var(--peach); }
-  .privacy-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
-
-  .privacy-wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .55s var(--ease); }
-  .privacy-wrap.open { grid-template-rows: 1fr; }
-  .privacy-inner { overflow: hidden; }
-  .privacy {
-    max-width: 1240px; margin: 0 auto;
-    display: grid; grid-template-columns: 240px 1fr; gap: clamp(24px, 5vw, 80px);
-    padding: 24px clamp(16px, 4vw, 48px) 72px;
-    opacity: 0; transform: translateY(14px);
-    transition: opacity .4s var(--ease), transform .5s var(--ease);
-  }
-  .privacy-wrap.open .privacy { opacity: 1; transform: none; transition-delay: .12s; }
-  .privacy aside { position: sticky; top: 90px; align-self: start; }
-  .privacy aside .eyebrow { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-  .privacy aside h2 { font-size: 32px; font-weight: 600; letter-spacing: -.035em; line-height: 1.05; margin-bottom: 14px; }
-  .privacy aside p { font-size: 13px; color: var(--muted); }
-  .privacy ol { list-style: none; counter-reset: s; display: grid; gap: 30px; }
-  .privacy ol > li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; padding-top: 22px; border-top: 1px solid var(--line); }
-  .privacy ol > li::before { content: counter(s, decimal-leading-zero); font-size: 12px; font-weight: 600; letter-spacing: .1em; color: var(--peach); padding-top: 4px; }
-  .privacy h3 { font-size: 18px; font-weight: 600; letter-spacing: -.02em; margin-bottom: 8px; }
-  .privacy li p, .privacy li ul { font-size: 15px; line-height: 1.65; color: #4E5451; }
-  .privacy li ul { padding-left: 18px; margin-top: 6px; }
-  .privacy li ul li { display: list-item; padding: 0; border: 0; list-style: disc; }
-  .privacy li ul li::before { content: none; }
-  .privacy li ul li::marker { color: var(--peach); }
-  @@media (max-width: 760px) {
-    .privacy { grid-template-columns: 1fr; }
-    .privacy aside { position: static; }
-  }
-</style>
-
-<header class="header">
-  <a asp-controller="Home" asp-action="Index" class="logo">
-    <svg viewBox="0 0 32 32" fill="none" stroke="#F8B97A" stroke-width="1.6"><circle cx="16" cy="16" r="7.5"/><ellipse cx="16" cy="16" rx="14" ry="4.6" transform="rotate(-18 16 16)"/></svg>
-    <span>Podróże Małe i Duże</span>
-  </a>
-  <a asp-controller="Home" asp-action="Index" class="nav-btn">
-    Strona główna
-    <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7M6 9.5V20h12V9.5"/></svg></span>
-  </a>
-</header>
-
-<main class="auth">
-  <canvas id="bgGlobe" aria-hidden="true"></canvas>
-
-  <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="card" id="loginForm">
+<form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="card" id="loginForm">
     @Html.AntiForgeryToken()
 
     <p class="eyebrow">Logowanie</p>
@@ -215,78 +48,12 @@
 
     <div class="divider"></div>
     <p class="switch">Nie masz konta? <a asp-controller="Account" asp-action="Register">Załóż konto</a></p>
-  </form>
-</main>
-
-<footer class="footer" id="stopka">
-  <div class="footer-bar">
-    <a asp-controller="Home" asp-action="Index" class="brand" title="Strona główna">
-      <svg viewBox="0 0 32 32" fill="none" stroke="#F8B97A" stroke-width="1.8"><circle cx="16" cy="16" r="7.5"/><ellipse cx="16" cy="16" rx="14" ry="4.6" transform="rotate(-18 16 16)"/></svg>
-      Podróże Małe i Duże
-    </a>
-    <button class="privacy-btn" id="privacyBtn" aria-expanded="false" aria-controls="privacyWrap">
-      Polityka prywatności
-      <svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
-    </button>
-    <span>© 2026 · Projekt zespołowy, Politechnika Białostocka</span>
-  </div>
-
-  <div class="privacy-wrap" id="privacyWrap">
-    <div class="privacy-inner">
-      <div class="privacy">
-        <aside>
-          <p class="eyebrow">Dokument</p>
-          <h2>Polityka prywatności</h2>
-          <p>Ostatnia aktualizacja: listopad 2026</p>
-        </aside>
-        <ol>
-          <li><div>
-            <h3>Kto odpowiada za Twoje dane</h3>
-            <p>Administratorem danych jest zespół projektowy serwisu Podróże Małe i Duże, realizujący projekt w ramach zajęć na Wydziale Informatyki Politechniki Białostockiej.</p>
-          </div></li>
-          <li><div>
-            <h3>Jakie dane zbieramy</h3>
-            <p>Zbieramy tylko to, co jest potrzebne do działania serwisu:</p>
-            <ul>
-              <li>adres e-mail i nazwę wyświetlaną podane przy rejestracji,</li>
-              <li>hasło, przechowywane wyłącznie w postaci zaszyfrowanego skrótu,</li>
-              <li>zapisane miejsca, oznaczenia „odwiedzone” oraz utworzone trasy,</li>
-              <li>datę założenia konta i podstawowe dane techniczne potrzebne do logowania.</li>
-            </ul>
-          </div></li>
-          <li><div>
-            <h3>Po co ich używamy</h3>
-            <p>Dane służą do prowadzenia Twojego konta, logowania, zapisywania ulubionych miejsc i tras oraz do zapewnienia bezpieczeństwa serwisu.</p>
-          </div></li>
-          <li><div>
-            <h3>Podstawa prawna</h3>
-            <p>Dane przetwarzamy zgodnie z RODO, na podstawie art. 6 ust. 1 lit. b oraz art. 6 ust. 1 lit. f.</p>
-          </div></li>
-          <li><div>
-            <h3>Pliki cookies i pamięć przeglądarki</h3>
-            <p>Używamy wyłącznie niezbędnego pliku cookie sesji, który utrzymuje Cię zalogowanym.</p>
-          </div></li>
-          <li><div>
-            <h3>Komu przekazujemy dane</h3>
-            <p>Nikomu nie sprzedajemy ani nie udostępniamy Twoich danych.</p>
-          </div></li>
-          <li><div>
-            <h3>Jak długo je przechowujemy</h3>
-            <p>Dane przechowujemy do czasu usunięcia konta.</p>
-          </div></li>
-          <li><div>
-            <h3>Twoje prawa</h3>
-            <p>Masz prawo dostępu do swoich danych, ich poprawienia, usunięcia, ograniczenia przetwarzania, przeniesienia oraz wniesienia sprzeciwu.</p>
-          </div></li>
-        </ol>
-      </div>
-    </div>
-  </div>
-</footer>
+</form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
+      // Dedykowany skrypt przełączania widoczności hasła dla tego widoku
       document.getElementById('eye').addEventListener('click', e => {
         const pass = document.getElementById('password');
         const show = pass.type === 'password';
@@ -294,38 +61,5 @@
         e.currentTarget.setAttribute('aria-label', show ? 'Ukryj hasło' : 'Pokaż hasło');
         e.currentTarget.style.color = show ? 'var(--ink)' : '';
       });
-
-
-      (() => {
-        const btn = document.getElementById('privacyBtn');
-        const wrap = document.getElementById('privacyWrap');
-        const toggle = (open) => {
-          open = open ?? !wrap.classList.contains('open');
-          wrap.classList.toggle('open', open);
-          btn.setAttribute('aria-expanded', open);
-          if (open) setTimeout(() => btn.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
-        };
-        btn.addEventListener('click', () => toggle());
-        if (location.hash === '#polityka-prywatnosci') toggle(true);
-      })();
-      
-      (() => {
-        const c = document.getElementById('bgGlobe'), ctx = c.getContext('2d');
-        const PEACH = '248,185,122', TILT = .38, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-        let s, r, rot = 0, last = performance.now();
-        const resize = () => { const d = Math.min(devicePixelRatio || 1, 2); s = c.clientWidth; c.width = c.height = s * d; ctx.setTransform(d, 0, 0, d, 0, 0); r = s * .47; };
-        const P = (la, lo) => { const x = Math.cos(la) * Math.sin(lo + rot), y = Math.sin(la), z = Math.cos(la) * Math.cos(lo + rot);
-          return [s / 2 + x * r, s / 2 - (y * Math.cos(TILT) - z * Math.sin(TILT)) * r, y * Math.sin(TILT) + z * Math.cos(TILT)]; };
-        const line = pts => { ctx.beginPath(); let pen = false;
-          for (const [la, lo] of pts) { const [x, y, z] = P(la, lo); if (z >= 0) { pen ? ctx.lineTo(x, y) : ctx.moveTo(x, y); pen = true; } else pen = false; }
-          ctx.stroke(); };
-        const frame = now => { const dt = Math.min(now - last, 50); last = now; if (!reduce) rot += dt * .00008;
-          ctx.clearRect(0, 0, s, s); ctx.strokeStyle = `rgba(${PEACH},.55)`; ctx.lineWidth = 1;
-          for (let i = 0; i < 24; i++) { const lo = i / 24 * Math.PI * 2, p = []; for (let j = 0; j <= 60; j++) p.push([-Math.PI / 2 + j / 60 * Math.PI, lo]); line(p); }
-          for (let i = 1; i < 12; i++) { const la = -Math.PI / 2 + i / 12 * Math.PI, p = []; for (let j = 0; j <= 96; j++) p.push([la, j / 96 * Math.PI * 2]); line(p); }
-          ctx.beginPath(); ctx.arc(s / 2, s / 2, r, 0, Math.PI * 2); ctx.stroke();
-          requestAnimationFrame(frame); };
-        resize(); addEventListener('resize', resize); requestAnimationFrame(frame);
-      })();
     </script>
 }
