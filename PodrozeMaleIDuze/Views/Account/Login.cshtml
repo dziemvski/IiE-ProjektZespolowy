@@ -1,0 +1,77 @@
+﻿@model LoginViewModel
+@{
+  ViewData["Title"] = "Logowanie";
+  Layout = "_AuthLayout";
+}
+
+<form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post"
+      class="card" id="loginForm">
+
+  <p class="eyebrow">Logowanie</p>
+  <h1>Witaj <em>z powrotem</em></h1>
+  <p class="lead">Zaloguj się, żeby zapisywać miejsca i układać trasy.</p>
+
+  <div asp-validation-summary="ModelOnly" class="notice-error" role="alert"></div>
+
+  <div class="field">
+    <label asp-for="Login">E-mail lub nazwa użytkownika</label>
+    <div class="input">
+      <svg class="lead-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"
+           stroke-linejoin="round">
+        <rect x="3" y="5" width="18" height="14" rx="3"/>
+        <path d="m4 7 8 6 8-6"/>
+      </svg>
+      <input asp-for="Login" type="text" placeholder="np. user123 lub user123@gmail.com" autocomplete="username">
+    </div>
+    <span asp-validation-for="Login"></span>
+  </div>
+
+  <div class="field">
+    <label asp-for="Password">Hasło</label>
+    <div class="input">
+      <svg class="lead-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"
+           stroke-linejoin="round">
+        <rect x="5" y="10" width="14" height="10" rx="2.5"/>
+        <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+      </svg>
+      <input asp-for="Password" id="password" type="password" placeholder="••••••••" autocomplete="current-password">
+      <button type="button" class="eye" id="eye" aria-label="Pokaż hasło">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </button>
+    </div>
+    <span asp-validation-for="Password"></span>
+  </div>
+
+  <div class="row">
+    <label class="check">
+      <input asp-for="RememberMe" type="checkbox"> Zapamiętaj mnie
+    </label>
+    <a asp-controller="Account" asp-action="ForgotPassword">Nie pamiętasz hasła?</a>
+  </div>
+
+  <button class="submit" type="submit">
+    Zaloguj się
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round">
+      <path d="M5 12h14M13 6l6 6-6 6"/>
+    </svg>
+  </button>
+
+  <div class="divider"></div>
+  <p class="switch">Nie masz konta? <a asp-controller="Account" asp-action="Register">Załóż konto</a></p>
+</form>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial"/>
+  <script>
+    document.getElementById('eye').addEventListener('click', e => {
+      const pass = document.getElementById('password');
+      const show = pass.type === 'password';
+      pass.type = show ? 'text' : 'password';
+      e.currentTarget.setAttribute('aria-label', show ? 'Ukryj hasło' : 'Pokaż hasło');
+      e.currentTarget.style.color = show ? 'var(--ink)' : '';
+    });
+  </script>
+}
