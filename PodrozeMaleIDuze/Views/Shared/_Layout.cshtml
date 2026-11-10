@@ -1,384 +1,72 @@
 ﻿@{
-    var zalogowany = User.Identity?.IsAuthenticated == true;
-    var nazwaUzytkownika = User.Identity?.Name ?? "Użytkownik";
-    var inicjal = nazwaUzytkownika.Length > 0
-        ? nazwaUzytkownika.Substring(0, 1).ToUpper()
-        : "U";
+    var current = ViewContext.RouteData.Values["controller"]?.ToString();
+    string Active(string controller) => current == controller ? "active" : "";
 }
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>@ViewData["Title"] - Podróże Małe i Duże</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;800;900&display=swap" rel="stylesheet" />
-
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/PodrozeMaleIDuze.styles.css" asp-append-version="true" />
-
-    <style>
-        /* STOPKA */
-
-        .stopka-glowna {
-            display: grid;
-            grid-template-columns: 1fr 180px 1fr;
-            align-items: start;
-            gap: 20px;
-        }
-
-        .stopka-logo {
-            text-decoration: none;
-            color: #202826;
-            font-weight: 800;
-            font-size: 12px;
-        }
-
-        .stopka-logo span {
-            color: #ffad67;
-            margin-right: 7px;
-        }
-
-        .stopka-copy {
-            text-align: right;
-            font-size: 11px;
-            color: #8a8e8b;
-        }
-
-        /* ROZWIJANA POLITYKA */
-
-        .polityka {
-            width: 180px;
-            min-width: 0;
-            text-align: center;
-        }
-
-        .polityka-przycisk {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 14px;
-            padding: 9px 15px;
-            border: 1px solid #e8e2da;
-            border-radius: 30px;
-            background: transparent;
-            color: #202826;
-            font-size: 12px;
-            cursor: pointer;
-            list-style: none;
-            white-space: nowrap;
-        }
-
-        .polityka-przycisk::-webkit-details-marker {
-            display: none;
-        }
-
-        .polityka[open] .polityka-przycisk {
-            border-color: #ffad67;
-        }
-
-        .polityka-strzalka {
-            display: inline-block;
-            transition: transform .3s;
-        }
-
-        .polityka[open] .polityka-strzalka {
-            transform: rotate(180deg);
-        }
-
-        /* ROZWINIĘTA TREŚĆ */
-
-        .polityka-tresc {
-            position: relative;
-            left: 50%;
-            transform: translateX(-50%);
-            width: min(1100px, calc(100vw - 48px));
-            display: grid;
-            grid-template-columns: 230px minmax(0, 1fr);
-            gap: 65px;
-            padding: 45px 0 25px;
-            text-align: left;
-        }
-
-        .polityka-naglowek small {
-            font-size: 11px;
-            color: #8a8e8b;
-        }
-
-        .polityka-naglowek h2 {
-            font-size: 29px;
-            font-weight: 900;
-            color: #202826;
-            line-height: 1.1;
-            margin: 12px 0;
-        }
-
-        .polityka-naglowek p {
-            color: #8a8e8b;
-            font-size: 12px;
-        }
-
-        .polityka-lista {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .polityka-element {
-            display: grid;
-            grid-template-columns: 25px minmax(0, 1fr);
-            gap: 15px;
-            padding: 21px 0;
-            border-top: 1px solid #e8e2da;
-        }
-
-        .polityka-numer {
-            color: #ffad67;
-            font-size: 11px;
-        }
-
-        .polityka-element h3 {
-            color: #202826;
-            font-size: 15px;
-            font-weight: 800;
-            margin-bottom: 7px;
-        }
-
-        .polityka-element p {
-            color: #777d7a;
-            font-size: 13px;
-            line-height: 1.65;
-            margin: 0;
-        }
-
-        @@media (max-width: 768px) {
-            .stopka-glowna {
-                grid-template-columns: 1fr;
-                justify-items: center;
-            }
-
-            .stopka-copy {
-                text-align: center;
-            }
-
-            .polityka-tresc {
-                grid-template-columns: 1fr;
-                gap: 25px;
-                padding-top: 35px;
-            }
-
-            .polityka-naglowek {
-                text-align: left;
-            }
-        }
-    </style>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/PodrozeMaleIDuze.styles.css" asp-append-version="true"/>
 </head>
 
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg app-navbar">
-            <div class="container">
-
-                <a class="navbar-brand d-flex align-items-center"
-                   asp-controller="Home" asp-action="Index">
-                    <span class="logo-placeholder">♧</span>
-                    <span class="brand-name">Podróże Małe i Duże</span>
-                </a>
-
-                <button class="navbar-toggler" type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#mainNav"
-                        aria-controls="mainNav"
-                        aria-expanded="false"
-                        aria-label="Otwórz menu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="mainNav">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Map"
-                               asp-action="Index">Mapa</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Saved"
-                               asp-action="Index">Zapisane miejsca</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Trips"
-                               asp-action="Index">Moje trasy</a>
-                        </li>
-                    </ul>
-
-                    <div class="d-flex align-items-center">
-                        @if (zalogowany)
-                        {
-                            <span class="nav-link">@nazwaUzytkownika</span>
-                            <span class="user-avatar">@inicjal</span>
-                        }
-                        else
-                        {
-                            <a class="nav-link"
-                               asp-controller="Account"
-                               asp-action="Index">
-                                Zaloguj
-                            </a>
-                            <span class="user-avatar">♙</span>
-                        }
-                    </div>
-                </div>
+<header>
+    <nav class="navbar navbar-expand-lg app-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                <span class="logo-placeholder">LOGO</span>
+                <span class="brand-name">PodrozeMaleIDuze</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link @Active("Home")" asp-area="" asp-controller="Home" asp-action="Index">Strona
+                            główna</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @Active("Map")" asp-area="" asp-controller="Map" asp-action="Index">Mapa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @Active("Saved")" asp-area="" asp-controller="Saved" asp-action="Index">Zapisane
+                            miejsca</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @Active("Trips")" asp-area="" asp-controller="Trips" asp-action="Index">Zrobione
+                            trasy</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link nav-login @Active("Account")" asp-area="" asp-controller="Account"
+                           asp-action="Login">Zaloguj się</a>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
+</header>
 
-    <main role="main" class="container flex-grow-1">
+<div class="container">
+    <main role="main" class="pb-3">
         @RenderBody()
     </main>
+</div>
 
-    <footer class="app-footer">
-        <div class="container stopka-glowna">
-
-            <a class="stopka-logo"
-               asp-controller="Home"
-               asp-action="Index">
-                <span>♧</span> Podróże Małe i Duże
-            </a>
-
-            <details class="polityka">
-
-                <summary class="polityka-przycisk">
-                    Polityka prywatności
-                    <span class="polityka-strzalka">⌄</span>
-                </summary>
-
-                <div class="polityka-tresc">
-
-                    <div class="polityka-naglowek">
-                        <small>DOKUMENT</small>
-                        <h2>Polityka<br />prywatności</h2>
-                        <p>Ostatnia aktualizacja: listopad 2026</p>
-                    </div>
-
-                    <div class="polityka-lista">
-
-                        <section class="polityka-element">
-                            <span class="polityka-numer">01</span>
-                            <div>
-                                <h3>Kto odpowiada za Twoje dane</h3>
-                                <p>
-                                    Administratorem danych jest zespół projektowy
-                                    serwisu Podróże Małe i Duże, realizujący projekt
-                                    w ramach zajęć na Politechnice Białostockiej.
-                                    Dane kontaktowe wymagają uzupełnienia.
-                                </p>
-                            </div>
-                        </section>
-
-                        <section class="polityka-element">
-                            <span class="polityka-numer">02</span>
-                            <div>
-                                <h3>Jakie dane zbieramy</h3>
-                                <p>
-                                    Zbieramy dane potrzebne do działania serwisu,
-                                    takie jak adres e-mail, nazwa użytkownika,
-                                    zapisane miejsca, utworzone trasy oraz
-                                    informacje techniczne potrzebne do logowania.
-                                </p>
-                            </div>
-                        </section>
-
-                        <section class="polityka-element">
-                            <span class="polityka-numer">03</span>
-                            <div>
-                                <h3>Po co ich używamy</h3>
-                                <p>
-                                    Dane służą do prowadzenia konta użytkownika,
-                                    obsługi logowania, zapisywania ulubionych
-                                    miejsc oraz planowania wycieczek.
-                                </p>
-                            </div>
-                        </section>
-
-                        <section class="polityka-element">
-                            <span class="polityka-numer">04</span>
-                            <div>
-                                <h3>Podstawa prawna</h3>
-                                <p>
-                                    Podstawy przetwarzania danych zależą od
-                                    realizowanych funkcjonalności serwisu.
-                                    Informacje należy zweryfikować przed
-                                    publicznym udostępnieniem aplikacji.
-                                </p>
-                            </div>
-                        </section>
-
-                        <section class="polityka-element">
-                            <span class="polityka-numer">05</span>
-                            <div>
-                                <h3>Pliki cookies i pamięć przeglądarki</h3>
-                                <p>
-                                    Serwis może używać niezbędnych plików cookies
-                                    do utrzymania sesji zalogowanego użytkownika
-                                    oraz zapamiętywania ustawień aplikacji.
-                                </p>
-                            </div>
-                        </section>
-
-                        <section class="polityka-element">
-                            <span class="polityka-numer">06</span>
-                            <div>
-                                <h3>Komu przekazujemy dane</h3>
-                                <p>
-                                    Dane mogą być przetwarzane przez usługi
-                                    techniczne niezbędne do funkcjonowania
-                                    aplikacji. Zewnętrzne serwisy podlegają
-                                    własnym zasadom prywatności.
-                                </p>
-                            </div>
-                        </section>
-
-                        <section class="polityka-element">
-                            <span class="polityka-numer">07</span>
-                            <div>
-                                <h3>Jak długo przechowujemy dane</h3>
-                                <p>
-                                    Dane przechowujemy przez okres potrzebny
-                                    do realizacji funkcji aplikacji,
-                                    zgodnie z obowiązującymi przepisami.
-                                </p>
-                            </div>
-                        </section>
-
-                        <section class="polityka-element">
-                            <span class="polityka-numer">08</span>
-                            <div>
-                                <h3>Twoje prawa</h3>
-                                <p>
-                                    Masz prawo dostępu do swoich danych,
-                                    ich poprawiania, usunięcia i ograniczenia
-                                    przetwarzania zgodnie z obowiązującym prawem.
-                                </p>
-                            </div>
-                        </section>
-
-                    </div>
-                </div>
-            </details>
-
-            <span class="stopka-copy">
-                © 2026 · Projekt zespołowy, Politechnika Białostocka
-            </span>
-
-        </div>
-    </footer>
+<footer class="app-footer">
+    <div class="container">
+        &copy; 2026 - PodrozeMaleIDuze -
+        <a asp-area="" asp-controller="Home" asp-action="Privacy">Polityka prywatności</a>
+    </div>
+</footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
