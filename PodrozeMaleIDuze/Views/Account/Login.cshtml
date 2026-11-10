@@ -1,12 +1,11 @@
 ﻿@model LoginViewModel
 @{
   ViewData["Title"] = "Logowanie";
-  Layout = "~/Views/Shared/_AuthLayout.cshtml";
+  Layout = "_AuthLayout";
 }
 
 <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post"
       class="card" id="loginForm">
-  @Html.AntiForgeryToken()
 
   <p class="eyebrow">Logowanie</p>
   <h1>Witaj <em>z powrotem</em></h1>

@@ -1,8 +1,4 @@
-﻿@{
-    var current = ViewContext.RouteData.Values["controller"]?.ToString();
-    string Active(string controller) => current == controller ? "active" : "";
-}
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8"/>
@@ -15,14 +11,11 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/PodrozeMaleIDuze.styles.css" asp-append-version="true"/>
 </head>
 <body>
-<header>
-</header>
 
 <div class="container">
-    <main role="main" class="pb-3">
+    <main role="main">
         @RenderBody()
     </main>
 </div>
