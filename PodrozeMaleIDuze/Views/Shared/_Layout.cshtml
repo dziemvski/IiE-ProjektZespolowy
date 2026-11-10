@@ -19,43 +19,6 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg app-navbar">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
-                <span class="logo-placeholder">LOGO</span>
-                <span class="brand-name">PodrozeMaleIDuze</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-                    aria-controls="mainNav" aria-expanded="false" aria-label="Menu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link @Active("Home")" asp-area="" asp-controller="Home" asp-action="Index">Strona
-                            główna</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @Active("Map")" asp-area="" asp-controller="Map" asp-action="Index">Mapa</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @Active("Saved")" asp-area="" asp-controller="Saved" asp-action="Index">Zapisane
-                            miejsca</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @Active("Trips")" asp-area="" asp-controller="Trips" asp-action="Index">Zrobione
-                            trasy</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link nav-login @Active("Account")" asp-area="" asp-controller="Account"
-                           asp-action="Login">Zaloguj się</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 </header>
 
 <div class="container">
@@ -63,13 +26,6 @@
         @RenderBody()
     </main>
 </div>
-
-<footer class="app-footer">
-    <div class="container">
-        &copy; 2026 - PodrozeMaleIDuze -
-        <a asp-area="" asp-controller="Home" asp-action="Privacy">Polityka prywatności</a>
-    </div>
-</footer>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

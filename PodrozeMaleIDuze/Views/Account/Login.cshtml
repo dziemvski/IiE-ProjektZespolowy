@@ -1,7 +1,7 @@
 ﻿@model PodrozeMaleIDuze.Models.LoginViewModel
 @{
     ViewData["Title"] = "Logowanie";
-    Layout = "~/Views/Shared/_LayoutAlt.cshtml"; // Odwołujesz się do dedykowanego layoutu
+    Layout = "~/Views/Shared/_LayoutAlt.cshtml";
 }
 
 <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="card" id="loginForm">
@@ -53,7 +53,6 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-      // Dedykowany skrypt przełączania widoczności hasła dla tego widoku
       document.getElementById('eye').addEventListener('click', e => {
         const pass = document.getElementById('password');
         const show = pass.type === 'password';
