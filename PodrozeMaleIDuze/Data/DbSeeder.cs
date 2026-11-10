@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PodrozeMaleIDuze.Constants;
 using PodrozeMaleIDuze.Models;
 
@@ -8,11 +9,13 @@ public static class DbSeeder
 {
     public static async Task SeedAsync(IServiceProvider services)
     {
+        var context = services.GetRequiredService<AppDbContext>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
         var configuration = services.GetRequiredService<IConfiguration>();
         var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger(nameof(DbSeeder));
 
+        await context.Database.MigrateAsync();
         await SeedRolesAsync(roleManager);
         await SeedAdminAsync(userManager, configuration, logger);
     }
@@ -25,13 +28,13 @@ public static class DbSeeder
                 continue;
 
             var result = await roleManager.CreateAsync(new IdentityRole(roleName));
+            if (!result.Succeeded && await roleManager.RoleExistsAsync(roleName))
+                continue;
             EnsureSucceeded(result, $"Nie udało się utworzyć roli {roleName}");
         }
     }
 
-    private static async Task SeedAdminAsync(
-        UserManager<ApplicationUser> userManager,
-        IConfiguration configuration,
+    private static async Task SeedAdminAsync(UserManager<ApplicationUser> userManager, IConfiguration configuration,
         ILogger logger)
     {
         var email = configuration["SeedAdmin:Email"];
@@ -55,13 +58,20 @@ public static class DbSeeder
             };
 
             var createResult = await userManager.CreateAsync(admin, password);
-            EnsureSucceeded(createResult, "Nie udało się utworzyć konta administratora");
+            if (!createResult.Succeeded)
+            {
+                admin = await userManager.FindByEmailAsync(email);
+                if (admin is null)
+                    EnsureSucceeded(createResult, "Nie udało się utworzyć konta administratora");
+            }
         }
 
-        if (!await userManager.IsInRoleAsync(admin, Roles.Admin))
+        if (!await userManager.IsInRoleAsync(admin!, Roles.Admin))
         {
-            var roleResult = await userManager.AddToRoleAsync(admin, Roles.Admin);
-            EnsureSucceeded(roleResult, "Nie udało się nadać roli Admin");
+            var roleResult = await userManager.AddToRoleAsync(admin!, Roles.Admin);
+
+            if (!roleResult.Succeeded && !await userManager.IsInRoleAsync(admin!, Roles.Admin))
+                EnsureSucceeded(roleResult, "Nie udało się nadać roli Admin");
         }
     }
 
