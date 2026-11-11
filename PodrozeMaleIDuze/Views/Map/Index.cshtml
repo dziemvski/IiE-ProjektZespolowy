@@ -1,6 +1,57 @@
-﻿@{ ViewData["Title"] = "Mapa"; }
+﻿@{
+    Layout = "_MapLayout";
+    ViewData["Title"] = "Mapa miejsc";
+}
 
-<div class="page-placeholder">
-    <h2>Mapa</h2>
-    <p>Tu powstanie nowy widok.</p>
-</div>
+<div id="map"></div>
+
+<aside class="panel">
+    <a class="brand" asp-controller="Home" asp-action="Index">Podróże Małe i Duże</a>
+    <p class="who">
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <span>Zalogowano: <b>@User.Identity.Name</b></span>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login">Zaloguj się</a>
+        }
+    </p>
+
+    <h1>Mapa miejsc</h1>
+    <p class="count" id="count"></p>
+
+    <input id="q" type="search" placeholder="Szukaj: natura, góry, zamki, Kraków…" autocomplete="off">
+    <div class="chips" id="chips"></div>
+    <ul class="list" id="list"></ul>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <section class="admin">
+            <h3>Zarządzanie</h3>
+            <small>tylko administrator</small>
+            <form id="placeForm" novalidate>
+                <input name="pname" maxlength="100" placeholder="Nazwa, np. Zamek w Pszczynie">
+                <div class="row">
+                    <select name="cat"></select>
+                    <input name="region" maxlength="50" placeholder="Województwo">
+                </div>
+                <input name="city" maxlength="100" placeholder="Miasto">
+                <textarea name="desc" rows="3" maxlength="500" placeholder="Krótki opis miejsca"></textarea>
+                <div class="row">
+                    <input name="lat" placeholder="Szerokość (lat)">
+                    <input name="lon" placeholder="Długość (lon)">
+                </div>
+                <p id="msg"></p>
+                <div class="bar">
+                    <button type="button" class="btn" id="pickBtn">Wskaż na mapie</button>
+                    <button type="submit" class="btn dark">Dodaj</button>
+                </div>
+            </form>
+        </section>
+    }
+</aside>
+
+@section Scripts {
+    <script src="~/js/map.js" asp-append-version="true"></script>
+}

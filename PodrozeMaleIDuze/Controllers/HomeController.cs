@@ -15,8 +15,8 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        ViewData["Tytul"] = "Podró¿e Ma³e i Du¿e";
-        ViewData["Opis"] = "Odkrywaj miejsca, które warto zobaczyæ.";
+        ViewData["Tytul"] = "PodrÃ³Å¼e MaÅ‚e i DuÅ¼e";
+        ViewData["Opis"] = "Odkrywaj miejsca, ktÃ³re warto zobaczyÄ‡.";
         return View();
     }
 
@@ -24,10 +24,10 @@ public class HomeController : Controller
     {
         var podroze = new List<string>
         {
-            "Tatry – górskie wêdrówki",
-            "Gdañsk – weekend nad morzem",
-            "Praga – city break",
-            "Rzym – historia i zabytki"
+            "Tatry â€“ gÃ³rskie wÄ™drÃ³wki",
+            "GdaÅ„sk â€“ weekend nad morzem",
+            "Praga â€“ city break",
+            "Rzym â€“ historia i zabytki"
         };
         return View();
     }
