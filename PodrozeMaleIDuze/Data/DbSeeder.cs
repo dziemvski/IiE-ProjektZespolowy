@@ -54,7 +54,9 @@ public static class DbSeeder
                 UserName = email,
                 Email = email,
                 EmailConfirmed = true,
-                DisplayName = "Administrator"
+                FirstName = "Administrator",
+                LastName = "Systemu",
+                DateOfBirth = new DateOnly(1990, 1, 1)
             };
 
             var createResult = await userManager.CreateAsync(admin, password);
