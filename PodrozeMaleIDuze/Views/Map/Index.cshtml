@@ -1,21 +1,10 @@
 ﻿@{
-    Layout = null;
+    Layout = "_MapLayout";
     ViewData["Title"] = "Mapa miejsc";
 }
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] · Podróże Małe i Duże</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;800&display=swap"
-          rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-    <link rel="stylesheet" href="~/css/map.css" asp-append-version="true">
-</head>
-<body>
 
 <div id="map"></div>
+
 <aside class="panel">
     <a class="brand" asp-controller="Home" asp-action="Index">Podróże Małe i Duże</a>
     <p class="who">
@@ -63,7 +52,6 @@
     }
 </aside>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="~/js/map.js" asp-append-version="true"></script>
-</body>
-</html>
+@section Scripts {
+    <script src="~/js/map.js" asp-append-version="true"></script>
+}
