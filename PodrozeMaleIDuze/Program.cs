@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PodrozeMaleIDuze.Data;
 using PodrozeMaleIDuze.Models;
+using PodrozeMaleIDuze.Services.AdminUser;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,31 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     })
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+
+    options.Events.OnRedirectToLogin = context =>
+    {
+        if (context.Request.Path.StartsWithSegments("/api"))
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        else
+            context.Response.Redirect(context.RedirectUri);
+        return Task.CompletedTask;
+    };
+
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        if (context.Request.Path.StartsWithSegments("/api"))
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        else
+            context.Response.Redirect(context.RedirectUri);
+        return Task.CompletedTask;
+    };
+});
+
+builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 
 var app = builder.Build();
 
@@ -44,6 +70,5 @@ app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

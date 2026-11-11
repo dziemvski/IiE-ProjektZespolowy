@@ -169,10 +169,8 @@ namespace PodrozeMaleIDuze.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<DateOnly>("DateOfBirth")
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -180,6 +178,16 @@ namespace PodrozeMaleIDuze.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -189,6 +197,10 @@ namespace PodrozeMaleIDuze.Migrations
 
                     b.Property<int?>("ManagedCityId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("MiddleName")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
