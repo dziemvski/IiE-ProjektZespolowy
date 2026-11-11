@@ -1,7 +1,4 @@
-// Skrypty wspólne dla _Layout i _AuthLayout.
-
-// 1. Rozwijana polityka prywatności w stopce
-(() => {
+﻿(() => {
     const btn = document.getElementById('privacyBtn');
     const wrap = document.getElementById('privacyWrap');
     if (!btn || !wrap) return;
@@ -17,10 +14,6 @@
     if (location.hash === '#polityka-prywatnosci') toggle(true);
 })();
 
-// 2. Obracająca się kula ziemska (siatka południków i równoleżników).
-//    Działa na każdym <canvas data-globe>. Opcjonalnie:
-//    data-back="true"   – rysuje też jaśniejszą tylną półkulę,
-//    data-marker="52,19" – kropka w punkcie (szer., dł. geogr. w stopniach).
 (() => {
     const PEACH = '248,185,122';
     const ROSE = '184,156,156';
@@ -44,7 +37,6 @@
             radius = size * .47;
         };
 
-        // Rzut punktu (szerokość, długość) na płaszczyznę; z >= 0 = przednia półkula
         const project = (lat, lon) => {
             const x = Math.cos(lat) * Math.sin(lon + rot);
             const y = Math.sin(lat);

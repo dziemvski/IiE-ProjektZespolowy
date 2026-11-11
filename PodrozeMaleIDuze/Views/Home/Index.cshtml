@@ -16,7 +16,6 @@
         </aside>
 
         <div class="hero-globe">
-            @* Siatkę kuli rysuje site.js; data-marker = Polska (52°N, 19°E) *@
             <canvas class="globe-canvas" data-globe data-back="true" data-marker="52,19" aria-hidden="true"></canvas>
 
             <div class="hero-globe-content">
@@ -52,7 +51,6 @@
         <a asp-controller="Map" asp-action="Index" class="link-underline">Zobacz wszystkie na mapie</a>
     </div>
 
-    @* Na razie dane statyczne – później karty będą generowane z bazy (Place) w pętli. *@
     <div class="places-grid">
         <article class="place-card">
             <div class="place-card-top">

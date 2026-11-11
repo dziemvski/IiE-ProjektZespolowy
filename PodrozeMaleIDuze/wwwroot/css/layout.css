@@ -1,9 +1,3 @@
-/* =========================================================
-   layout.css – elementy wspólne dla _Layout i _AuthLayout:
-   zmienne kolorów, reset, nagłówek, przyciski nawigacji,
-   stopka z rozwijaną polityką prywatności.
-   ========================================================= */
-
 :root {
     --bg: #F7F5F0;
     --ink: #1C2321;
@@ -42,8 +36,6 @@ a {
     text-decoration: none;
 }
 
-/* ---------- NAGŁÓWEK ---------- */
-
 .header {
     position: fixed;
     inset: 0 0 auto 0;
@@ -80,7 +72,6 @@ a {
     gap: 10px;
 }
 
-/* Przycisk z ikoną w kółku (np. "Zaloguj", "Strona główna") */
 .nav-btn {
     display: flex;
     align-items: center;
@@ -118,7 +109,6 @@ a {
     stroke: var(--ink);
 }
 
-/* Ciemna pigułka "Mapa" */
 .nav-pill {
     display: inline-flex;
     align-items: center;
@@ -149,7 +139,6 @@ a {
     background: #2C3532;
 }
 
-/* Obramowana pigułka "Załóż konto" */
 .nav-pill-outline {
     font-weight: 500;
     border-color: var(--peach);
@@ -159,7 +148,6 @@ a {
     background: var(--peach-soft);
 }
 
-/* Zalogowany użytkownik: nazwa + kółko z inicjałem */
 .nav-user {
     display: flex;
     align-items: center;
@@ -200,8 +188,6 @@ a {
     color: var(--ink);
 }
 
-/* ---------- STOPKA I POLITYKA PRYWATNOŚCI ---------- */
-
 .footer {
     border-top: 1px solid var(--line);
     margin-top: 40px;
@@ -239,7 +225,7 @@ a {
 }
 
 .privacy-btn {
-    scroll-margin-top: 90px; /* żeby po rozwinięciu nie chował się pod stałym nagłówkiem */
+    scroll-margin-top: 90px; 
     display: inline-flex;
     align-items: center;
     gap: 8px;

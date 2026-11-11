@@ -1,9 +1,3 @@
-/* =========================================================
-   site.css – widoki aplikacji w _Layout (strona główna itd.).
-   Zmienne kolorów, nagłówek i stopka są w layout.css.
-   ========================================================= */
-
-/* Treść pod stałym (fixed) nagłówkiem */
 .page {
     flex: 1;
     padding-top: 80px;
@@ -15,8 +9,6 @@
     text-transform: uppercase;
     color: var(--muted);
 }
-
-/* ---------- HERO ---------- */
 
 .hero {
     position: relative;
@@ -93,7 +85,6 @@
     color: var(--muted);
 }
 
-/* Kula ziemska rysowana w canvasie (site.js) + treść na środku */
 .hero-globe {
     position: relative;
     width: min(600px, 88vw);
@@ -131,7 +122,6 @@
     color: var(--rose);
 }
 
-/* Ciemny przycisk z pomarańczową strzałką ("Otwórz mapę") */
 .btn-dark {
     display: inline-flex;
     align-items: center;
@@ -174,7 +164,6 @@
     transform: translateX(2px);
 }
 
-/* "Myszka" – przewiń do popularnych miejsc */
 .scroll-mouse {
     display: block;
     width: 22px;
@@ -203,8 +192,6 @@
     30% { opacity: 1; }
     100% { opacity: 0; transform: translateY(9px); }
 }
-
-/* ---------- POPULARNE MIEJSCA ---------- */
 
 .popular {
     max-width: 1240px;
@@ -342,8 +329,6 @@
     border-color: var(--peach);
 }
 
-/* ---------- POZOSTAŁE WIDOKI (tymczasowe) ---------- */
-
 .page-placeholder {
     max-width: 1240px;
     margin: 40px auto;
@@ -357,8 +342,6 @@
     font-weight: 600;
     margin-bottom: 8px;
 }
-
-/* ---------- MNIEJSZE EKRANY ---------- */
 
 @media (max-width: 900px) {
     .hero-stage {

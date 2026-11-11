@@ -1,8 +1,4 @@
-/* auth.css – tylko widoki logowania/rejestracji.
-   Zmienne, nagłówek i stopka są w layout.css. */
-
-/* LOGOWANIE / KARTA FORMULARZA */
-.auth {
+﻿.auth {
     flex: 1;
     display: grid;
     place-items: center;
