@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PodrozeMaleIDuze.Data;
 using PodrozeMaleIDuze.Models;
 using PodrozeMaleIDuze.Services.AdminUser;
+using PodrozeMaleIDuze.Services.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
