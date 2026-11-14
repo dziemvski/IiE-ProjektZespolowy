@@ -1,0 +1,68 @@
+@using System.Security.Claims
+@using PodrozeMaleIDuze.Constants
+@model PodrozeMaleIDuze.Models.ViewModels.AdminPanel.UserDetailsViewModel
+@{
+    ViewData["Title"] = "Szczegóły użytkownika";
+    var isMe = Model.Id == User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true"/>
+}
+
+<div class="admin">
+    <a asp-action="Index" class="back-link">← Wróć do listy</a>
+    <p class="eyebrow">Użytkownik</p>
+    <h1>@Model.FirstName @Model.LastName</h1>
+    <p class="lead">@Model.Email</p>
+
+    <div class="details-grid">
+        <section class="details-card">
+            <h2>Dane konta</h2>
+            <dl class="details-list">
+                <dt>Imię</dt>
+                <dd>@Model.FirstName</dd>
+                <dt>Nazwisko</dt>
+                <dd>@Model.LastName</dd>
+                <dt>Nazwa użytkownika</dt>
+                <dd>@Model.UserName</dd>
+                <dt>E-mail</dt>
+                <dd>@Model.Email</dd>
+                <dt>Data urodzenia</dt>
+                <dd>@Model.DateOfBirth.ToString("dd.MM.yyyy")</dd>
+                @if (Model.Role == Roles.CityAdmin)
+                {
+                    <dt>Miasta</dt>
+                    <dd>@string.Join(", ", Model.Cities)</dd>
+                }
+            </dl>
+        </section>
+
+        <form class="details-card" asp-action="Update" asp-route-id="@Model.Id" method="post">
+            <h2>Uprawnienia</h2>
+
+            <label class="fld"><span>Rola</span>
+                <select asp-for="Role" class="role" disabled="@isMe">
+                    <option value="@Roles.User">Użytkownik</option>
+                    <option value="@Roles.CityAdmin">Admin miasta</option>
+                    <option value="@Roles.Admin">Admin</option>
+                </select>
+            </label>
+
+            <label class="switch">
+                <input asp-for="IsEnabled" disabled="@isMe">
+                <span>Konto aktywne</span>
+            </label>
+            <small class="details-hint">Zablokowany użytkownik nie może się zalogować.</small>
+
+            @if (isMe)
+            {
+                <p class="details-hint">Nie możesz zmienić własnej roli ani zablokować własnego konta.</p>
+            }
+
+            <div class="details-actions">
+                <button type="submit" class="btn dark" disabled="@isMe">Zapisz zmiany</button>
+            </div>
+        </form>
+    </div>
+</div>

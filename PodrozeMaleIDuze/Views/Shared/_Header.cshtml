@@ -1,3 +1,4 @@
+@using PodrozeMaleIDuze.Constants
 @* Nagłówek dla _Layout. Zawartość prawej strony zależy od tego,
    czy użytkownik jest zalogowany (User.Identity.IsAuthenticated). *@
 @{
@@ -25,6 +26,10 @@
 
         @if (isLoggedIn)
         {
+            @if (User.IsInRole(Roles.Admin))
+            {
+                <a asp-controller="AdminPanel" asp-action="Index" class="nav-pill nav-pill-outline">Panel admina</a>
+            }
             <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
                 <button type="submit" class="nav-link-btn">Wyloguj</button>
             </form>
