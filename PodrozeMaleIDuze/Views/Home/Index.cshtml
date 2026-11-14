@@ -1,6 +1,118 @@
-﻿@{ ViewData["Title"] = "Strona główna"; }
+@{
+    ViewData["Title"] = "Strona główna";
+}
 
-<div class="d-flex justify-content-center align-items-center gap-3 min-vh-100">
-    <a class="btn btn-dark btn-lg px-5" asp-controller="Account" asp-action="Login">Zaloguj się</a>
-    <a class="btn btn-outline-dark btn-lg px-5" asp-controller="Map" asp-action="Index">Mapa</a>
-</div>
+<section class="hero">
+    <h2 class="hero-title" aria-label="Podróże małe i duże">
+        <span class="hero-title-top">PODRÓŻE</span>
+        <span class="hero-title-main"><span class="light">małe</span> i DUŻE</span>
+    </h2>
+
+    <div class="hero-stage">
+        <aside class="hero-side hero-side-left">
+            <span class="num">01 — ODKRYWAJ</span>
+            <h3>Zamki, parki i szlaki</h3>
+            <p>Przeglądaj miejsca na liście albo na mapie i zapisuj te, które chcesz zobaczyć.</p>
+        </aside>
+
+        <div class="hero-globe">
+            <canvas class="globe-canvas" data-globe data-back="true" data-marker="52,19" aria-hidden="true"></canvas>
+
+            <div class="hero-globe-content">
+                <p class="eyebrow">Polska z bliska</p>
+                <h1>Odkrywaj.<br/>Zapisuj.<em>Ruszaj.</em></h1>
+                <a asp-controller="Map" asp-action="Index" class="btn-dark">
+                    Otwórz mapę
+                    <span class="ico">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round">
+                            <path d="M5 12h14M13 6l6 6-6 6"/>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <aside class="hero-side hero-side-right">
+            <span class="num">02 — PLANUJ</span>
+            <h3>Twoja własna trasa</h3>
+            <p>Połącz kilka punktów w wycieczkę i odhaczaj miejsca, w których już byłeś.</p>
+        </aside>
+    </div>
+
+    <a href="#popularne" class="scroll-mouse" aria-label="Przewiń do popularnych miejsc"></a>
+</section>
+
+<section class="popular" id="popularne">
+    <div class="popular-head">
+        <div>
+            <p class="eyebrow">Najczęściej odwiedzane</p>
+            <h2>Popularne miejsca</h2>
+        </div>
+        <a asp-controller="Map" asp-action="Index" class="link-underline">Zobacz wszystkie na mapie</a>
+    </div>
+
+    <div class="places-grid">
+        <article class="place-card">
+            <div class="place-card-top">
+                <span class="tag">Zamek</span>
+                <span>01</span>
+            </div>
+            <div class="place-illustration">
+                <svg viewBox="0 0 220 140" fill="none" stroke="currentColor" stroke-width="1.3">
+                    <path d="M18 126H202M45 126V57H63V126M157 126V57H175V126M63 126V77H157V126M97 77V28L110 10L123 28V77M97 28H123M103 126V104Q110 90 117 104V126M75 95V104M145 95V104M51 57V49H57V57M163 57V49H169V57M97 52H123"/>
+                </svg>
+            </div>
+            <h3>Zamek w Malborku</h3>
+            <p class="place-location">Malbork · pomorskie</p>
+            <div class="place-card-bottom">
+                <div><strong>XIII w.</strong><small>gotyk krzyżacki</small></div>
+                <div><strong>UNESCO</strong><small>lista dziedzictwa</small></div>
+                <a asp-controller="Map" asp-action="Index" class="place-arrow" aria-label="Zobacz na mapie">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+            </div>
+        </article>
+
+        <article class="place-card">
+            <div class="place-card-top">
+                <span class="tag">Punkt widokowy</span>
+                <span>02</span>
+            </div>
+            <div class="place-illustration">
+                <svg viewBox="0 0 220 140" fill="none" stroke="currentColor" stroke-width="1.3">
+                    <path d="M15 113L67 48L93 75L126 32L163 81L183 60L211 113M40 123Q110 104 180 123Q110 139 40 123ZM65 123H85M120 119H150"/>
+                </svg>
+            </div>
+            <h3>Morskie Oko</h3>
+            <p class="place-location">Zakopane · małopolskie</p>
+            <div class="place-card-bottom">
+                <div><strong>1395 m</strong><small>n.p.m.</small></div>
+                <div><strong>Tatry</strong><small>park narodowy</small></div>
+                <a asp-controller="Map" asp-action="Index" class="place-arrow" aria-label="Zobacz na mapie">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+            </div>
+        </article>
+
+        <article class="place-card">
+            <div class="place-card-top">
+                <span class="tag">Natura</span>
+                <span>03</span>
+            </div>
+            <div class="place-illustration">
+                <svg viewBox="0 0 220 140" fill="none" stroke="currentColor" stroke-width="1.3">
+                    <path d="M15 126H205M50 126V85M25 85L50 38L75 85H25ZM30 69L50 27L70 69M110 126V93M90 93L110 47L130 93H90ZM95 78L110 38L125 78M170 126V85M140 85L170 28L200 85H140ZM148 68L170 17L192 68"/>
+                </svg>
+            </div>
+            <h3>Puszcza Białowieska</h3>
+            <p class="place-location">Białowieża · podlaskie</p>
+            <div class="place-card-bottom">
+                <div><strong>Żubry</strong><small>ostoja gatunku</small></div>
+                <div><strong>UNESCO</strong><small>las pierwotny</small></div>
+                <a asp-controller="Map" asp-action="Index" class="place-arrow" aria-label="Zobacz na mapie">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+            </div>
+        </article>
+    </div>
+</section>
