@@ -9,4 +9,6 @@ public class AdminUserRowViewModel
     public string Role { get; set; } = string.Empty;
 
     public List<string> Cities { get; set; } = new();
+
+    public bool IsEnabled { get; set; } = true;
 }
