@@ -658,4 +658,10 @@ select.role:disabled {
         grid-template-columns: 1fr;
         gap: 10px;
     }
+    
+    .chip button:disabled,
+    .add-city:disabled {
+        opacity: .6;
+        cursor: not-allowed;
+    }
 }
