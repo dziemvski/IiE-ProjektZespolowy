@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PodrozeMaleIDuze.Models;
 using PodrozeMaleIDuze.Services.Auth;
@@ -49,6 +50,18 @@ public class AccountController(IAuthService authService) : Controller
 
         ModelState.AddModelError(string.Empty, "Nieprawidłowy login lub hasło.");
         return View(model);
+    }
+
+    // GET /Account/Register
+    // Wyświetla formularz rejestracji
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Register()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+            return RedirectToAction("Index", "Home");
+
+        return View(new RegisterViewModel());
     }
 
     // POST /Account/Logout
