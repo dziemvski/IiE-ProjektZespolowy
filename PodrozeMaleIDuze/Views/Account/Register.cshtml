@@ -1,0 +1,218 @@
+﻿@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Rejestracja";
+    Layout = "_AuthLayout";
+}
+
+<form asp-controller="Account"
+      asp-action="Register"
+      method="post"
+      asp-antiforgery="true"
+      class="card register-card"
+      id="registerForm">
+
+    <p class="eyebrow">REJESTRACJA</p>
+
+    <h1>Załóż <em>konto</em></h1>
+
+    <p class="lead">
+        Zapisuj ulubione miejsca i układaj własne trasy.
+        To zajmie chwilę.
+    </p>
+
+    <div asp-validation-summary="ModelOnly"
+         class="notice-error"
+         role="alert"></div>
+
+    <div class="field">
+        <label asp-for="UserName">Nazwa użytkownika</label>
+
+        <div class="input">
+            <svg class="lead-ico" viewBox="0 0 24 24"
+                 fill="none" stroke-width="1.6"
+                 stroke-linecap="round">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 21c0-5 3-8 8-8s8 3 8 8" />
+            </svg>
+
+            <input asp-for="UserName"
+                   placeholder="np. jan.kowalski"
+                   autocomplete="username" />
+        </div>
+
+        <span asp-validation-for="UserName"></span>
+    </div>
+
+    <div class="field">
+        <label asp-for="Email">E-mail</label>
+
+        <div class="input">
+            <svg class="lead-ico" viewBox="0 0 24 24"
+                 fill="none" stroke-width="1.6"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+                <rect x="3" y="5" width="18"
+                      height="14" rx="3" />
+                <path d="m4 7 8 6 8-6" />
+            </svg>
+
+            <input asp-for="Email"
+                   type="email"
+                   placeholder="np. jan.kowalski@gmail.com"
+                   autocomplete="email" />
+        </div>
+
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div class="field">
+        <label asp-for="Password">Hasło</label>
+
+        <div class="input">
+            <svg class="lead-ico" viewBox="0 0 24 24"
+                 fill="none" stroke-width="1.6">
+                <rect x="5" y="10"
+                      width="14" height="10" rx="2.5" />
+                <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+            </svg>
+
+            <input asp-for="Password"
+                   type="password"
+                   placeholder="min. 8 znaków, litera i cyfra"
+                   autocomplete="new-password" />
+
+            <button type="button"
+                    class="eye"
+                    data-password-toggle="Password"
+                    aria-label="Pokaż hasło">
+                <svg viewBox="0 0 24 24"
+                     fill="none" stroke-width="1.6">
+                    <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="register-strength">
+            <div class="register-strength-track">
+                <span id="passwordStrengthBar"></span>
+            </div>
+            <small id="passwordStrengthText">
+                Min. 8 znaków, w tym litera i cyfra.
+            </small>
+        </div>
+
+        <span asp-validation-for="Password"></span>
+    </div>
+
+    <div class="field">
+        <label asp-for="ConfirmPassword">Powtórz hasło</label>
+
+        <div class="input">
+            <svg class="lead-ico" viewBox="0 0 24 24"
+                 fill="none" stroke-width="1.6">
+                <rect x="5" y="10"
+                      width="14" height="10" rx="2.5" />
+                <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+            </svg>
+
+            <input asp-for="ConfirmPassword"
+                   type="password"
+                   placeholder="Powtórz hasło"
+                   autocomplete="new-password" />
+
+            <button type="button"
+                    class="eye"
+                    data-password-toggle="ConfirmPassword"
+                    aria-label="Pokaż powtórzone hasło">
+                <svg viewBox="0 0 24 24"
+                     fill="none" stroke-width="1.6">
+                    <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                </svg>
+            </button>
+        </div>
+
+        <span asp-validation-for="ConfirmPassword"></span>
+    </div>
+
+    <div class="register-profile">
+        <p class="register-profile-title">DANE PROFILU</p>
+
+        <div class="register-profile-grid">
+            <div class="field">
+                <label asp-for="FirstName">Imię</label>
+                <div class="input">
+                    <input asp-for="FirstName"
+                           placeholder="Jan"
+                           autocomplete="given-name" />
+                </div>
+                <span asp-validation-for="FirstName"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="LastName">Nazwisko</label>
+                <div class="input">
+                    <input asp-for="LastName"
+                           placeholder="Kowalski"
+                           autocomplete="family-name" />
+                </div>
+                <span asp-validation-for="LastName"></span>
+            </div>
+        </div>
+
+        <div class="field">
+            <label asp-for="DateOfBirth">Data urodzenia</label>
+            <div class="input">
+                <input asp-for="DateOfBirth"
+                       type="date"
+                       autocomplete="bday" />
+            </div>
+            <span asp-validation-for="DateOfBirth"></span>
+        </div>
+    </div>
+    <div class="register-consent">
+        <label class="check">
+            <input asp-for="AcceptPrivacy" type="checkbox" />
+            <span>
+                Akceptuję
+                <a href="#polityka-prywatnosci"
+                   id="registerPrivacyLink">
+                    politykę prywatności
+                </a>
+            </span>
+        </label>
+
+        <span asp-validation-for="AcceptPrivacy"></span>
+        <span id="privacyLiveError"
+              class="register-live-error"
+              aria-live="polite"></span>
+    </div>
+    <button type="submit" class="submit register-submit">
+        Załóż konto
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.8">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+    </button>
+
+    <div class="register-bottom">
+        <div class="divider"></div>
+
+        <p class="switch">
+            Masz już konto?
+            <a asp-controller="Account" asp-action="Login">
+                Zaloguj się
+            </a>
+        </p>
+    </div>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/register.js" asp-append-version="true"></script>
+
+}
