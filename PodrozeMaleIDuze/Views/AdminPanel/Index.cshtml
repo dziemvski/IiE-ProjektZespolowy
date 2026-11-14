@@ -1,3 +1,4 @@
+@using System.Security.Claims
 @using PodrozeMaleIDuze.Constants
 @model PodrozeMaleIDuze.Models.ViewModels.AdminPanel.AdminPanelViewModel
 @{
@@ -9,6 +10,7 @@
     int Count(string role) => Model.Users.Count(u => u.Role == role);
     var cityAdmins = Model.Users.Where(u => u.Role == Roles.CityAdmin).ToList();
     var adminCities = cityAdmins.SelectMany(u => u.Cities).Distinct().OrderBy(c => c).ToList();
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
 @section Styles {
@@ -62,7 +64,7 @@
                 <span>Użytkownik</span><span>Rola</span><span>Miasta (admin miasta)</span><span>Status</span></div>
             @foreach (var user in Model.Users)
             {
-                var isMe = user.Email == User.Identity?.Name;
+                var isMe = user.Id == currentUserId;
                 <div class="tr" data-role="@user.Role">
                     <div class="user">
                         <span class="av">@user.UserName[..1].ToUpper()</span>
@@ -104,6 +106,7 @@
                         }
                         else
                         {
+                            //TODO: zmienic to na cos innego
                             <span class="na">— dotyczy tylko adminów miast</span>
                         }
                     </div>

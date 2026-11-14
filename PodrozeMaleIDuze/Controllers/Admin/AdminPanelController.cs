@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PodrozeMaleIDuze.Constants;
 using PodrozeMaleIDuze.Models.ViewModels.Admin;
@@ -22,6 +23,11 @@ public class AdminPanelController : Controller
             NewUser = new CreateUserViewModel { AvailableCities = cities },
             Users =
             [
+                new AdminUserRowViewModel
+                {
+                    Id = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "1",
+                    UserName = "admin123", Email = "admin123@gmail.com", Role = Roles.Admin
+                },
                 new AdminUserRowViewModel
                 {
                     Id = "1", UserName = "admin123", Email = "admin123@gmail.com", Role = Roles.Admin
