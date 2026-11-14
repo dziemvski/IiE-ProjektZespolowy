@@ -660,12 +660,6 @@ select.role:disabled {
     }
 }
 
-.chip button:disabled,
-.add-city:disabled {
-    opacity: .6;
-    cursor: not-allowed;
-}
-
 .role-tag {
     justify-self: start;
     border: 1px solid var(--line);

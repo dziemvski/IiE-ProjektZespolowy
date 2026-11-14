@@ -79,6 +79,7 @@
                             <small>@user.Email</small>
                         </div>
                     </div>
+                    // TODO(backend): obsłużyć użytkownika bez roli lub z nieznaną rolą (etykieta w Index.cshtml)
                     <span class="role-tag">@roleLabels[user.Role]</span>
                     <div class="cities">
                         @if (user.Role == Roles.CityAdmin)
