@@ -25,7 +25,6 @@
          class="notice-error"
          role="alert"></div>
 
-    <!-- NAZWA UŻYTKOWNIKA -->
     <div class="field">
         <label asp-for="UserName">Nazwa użytkownika</label>
 
@@ -45,7 +44,6 @@
         <span asp-validation-for="UserName"></span>
     </div>
 
-    <!-- EMAIL -->
     <div class="field">
         <label asp-for="Email">E-mail</label>
 
@@ -67,8 +65,6 @@
 
         <span asp-validation-for="Email"></span>
     </div>
-
-    <!-- HASŁO -->
     <div class="field">
         <label asp-for="Password">Hasło</label>
 
@@ -109,7 +105,6 @@
         <span asp-validation-for="Password"></span>
     </div>
 
-    <!-- POWTÓRZENIE HASŁA -->
     <div class="field">
         <label asp-for="ConfirmPassword">Powtórz hasło</label>
 
@@ -139,12 +134,8 @@
         </div>
 
         <span asp-validation-for="ConfirmPassword"></span>
-        <span id="confirmLiveError"
-              class="register-live-error"
-              aria-live="polite"></span>
     </div>
 
-    <!-- DANE PROFILU -->
     <div class="register-profile">
         <p class="register-profile-title">DANE PROFILU</p>
 
@@ -180,8 +171,6 @@
             <span asp-validation-for="DateOfBirth"></span>
         </div>
     </div>
-
-    <!-- POLITYKA PRYWATNOŚCI -->
     <div class="register-consent">
         <label class="check">
             <input asp-for="AcceptPrivacy" type="checkbox" />
@@ -199,8 +188,6 @@
               class="register-live-error"
               aria-live="polite"></span>
     </div>
-
-    <!-- PRZYCISK REJESTRACJI -->
     <button type="submit" class="submit register-submit">
         Załóż konto
         <svg viewBox="0 0 24 24"

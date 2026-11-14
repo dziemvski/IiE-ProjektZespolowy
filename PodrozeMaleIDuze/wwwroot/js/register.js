@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const opis = document.getElementById("passwordStrengthText");
     const bladHasla = document.getElementById("confirmLiveError");
 
-    // Pokazywanie i ukrywanie haseł
+  
     document.querySelectorAll("[data-password-toggle]")
         .forEach(przycisk => {
             przycisk.addEventListener("click", () => {
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-    // Pasek siły hasła
+  
     function sprawdzHaslo() {
         if (!haslo || !pasek || !opis) return;
 
@@ -55,17 +55,16 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (punkty < 4) {
             pasek.style.width = "65%";
             pasek.style.background = "#E5AB60";
-            opis.textContent = "Hasło spełnia wymagania";
+            opis.textContent = "Prawidłowe, ale słabe hasło";
         } else {
             pasek.style.width = "100%";
             pasek.style.background = "#5F9678";
-            opis.textContent = "Dłuższe hasło";
+            opis.textContent = "Hasło ma dobrą długość";
         }
 
         sprawdzPowtorzenie();
     }
 
-    // Sprawdzanie zgodności obu haseł
     function sprawdzPowtorzenie() {
         if (!powtorzHaslo || !haslo || !bladHasla) return;
 
@@ -80,7 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
     haslo?.addEventListener("input", sprawdzHaslo);
     powtorzHaslo?.addEventListener("input", sprawdzPowtorzenie);
 
-    // Sprawdzanie zaznaczenia polityki prywatności
     const formularz = document.getElementById("registerForm");
     const zgoda = document.getElementById("AcceptPrivacy");
     const bladZgody = document.getElementById("privacyLiveError");
@@ -106,7 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Otwarcie polityki prywatności w stopce
     const link = document.getElementById("registerPrivacyLink");
 
     link?.addEventListener("click", event => {

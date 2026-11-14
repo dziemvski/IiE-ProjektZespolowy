@@ -269,12 +269,6 @@
     border-bottom: 1px solid var(--peach);
 }
 
-
-
-/* ====================================
-   REJESTRACJA - WYGLĄD FORMULARZA
-==================================== */
-
 .register-card {
     width: min(420px, 100%);
 }
