@@ -195,6 +195,9 @@
         </label>
 
         <span asp-validation-for="AcceptPrivacy"></span>
+        <span id="privacyLiveError"
+              class="register-live-error"
+              aria-live="polite"></span>
     </div>
 
     <!-- PRZYCISK REJESTRACJI -->
@@ -223,4 +226,6 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/register.js" asp-append-version="true"></script>
+
 }

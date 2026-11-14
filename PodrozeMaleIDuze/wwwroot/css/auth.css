@@ -395,3 +395,37 @@
         padding: 26px 22px;
     }
 }
+
+
+
+.register-card .input:has(input.input-validation-error) {
+    border-color: var(--err);
+}
+
+    .register-card .input:has(input.input-validation-error):focus-within {
+        box-shadow: 0 0 0 3px rgba(194, 96, 79, .10);
+    }
+
+.register-card .field-validation-error {
+    display: block;
+    margin-top: 7px;
+    color: var(--err);
+    font-size: 12px;
+}
+
+.register-card .field-validation-valid {
+    display: none;
+}
+
+.register-card .notice-error:empty,
+.register-card .validation-summary-valid {
+    display: none;
+}
+
+.register-card .register-consent .field-validation-error {
+    margin-top: 7px;
+}
+
+.register-card .input input.input-validation-error {
+    color: var(--ink);
+}
