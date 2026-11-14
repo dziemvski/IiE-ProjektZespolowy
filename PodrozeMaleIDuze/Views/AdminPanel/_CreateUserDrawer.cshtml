@@ -1,0 +1,65 @@
+@model PodrozeMaleIDuze.Models.ViewModels.Admin.CreateUserViewModel
+
+<div class="drawer-bg" id="drawerBg"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+    <div class="drawer-head">
+        <div><p class="eyebrow">Nowe konto</p>
+            <h2 id="drawerTitle">Utwórz użytkownika</h2></div>
+        <button class="x" id="drawerClose" type="button" aria-label="Zamknij">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round">
+                <path d="M6 6l12 12M18 6 6 18"/>
+            </svg>
+        </button>
+    </div>
+
+    <form id="userForm" asp-controller="AdminPanel" asp-action="Create" method="post">
+        <label class="fld"><span>Nazwa użytkownika</span>
+            <input asp-for="UserName" maxlength="30" autocomplete="off" spellcheck="false"
+                   placeholder="np. jan.kowalski">
+            <small class="hint">3–30 znaków: litery, cyfry, kropka, myślnik lub podkreślnik.</small>
+            <span asp-validation-for="UserName"></span>
+        </label>
+        <label class="fld"><span>E-mail</span>
+            <input asp-for="Email" type="email" maxlength="120" autocomplete="off"
+                   placeholder="np. jan.kowalski@gmail.com">
+            <span asp-validation-for="Email"></span>
+        </label>
+        <div class="fld"><span>Hasło startowe</span>
+            <div class="pw">
+                <input asp-for="Password" type="password" maxlength="64" autocomplete="new-password"
+                       aria-label="Hasło startowe">
+                <button type="button" id="pwShow">Pokaż</button>
+                <button type="button" id="pwGen">Generuj</button>
+            </div>
+            <div class="meter"><i id="pwMeter"></i></div>
+            <small class="hint">Min. 8 znaków, w tym litera i cyfra. Przekaż je użytkownikowi.</small>
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div class="fld"><span>Rola</span>
+            <input asp-for="Role" type="hidden">
+            <div class="seg" id="newRole">
+                <button type="button" data-r="User" class="on">Użytkownik</button>
+                <button type="button" data-r="CityAdmin">Admin miasta</button>
+                <button type="button" data-r="Admin">Admin</button>
+            </div>
+            <p class="role-desc" id="roleDesc"></p>
+        </div>
+        <div class="fld" id="newCitiesWrap" hidden><span>Miasta admina</span>
+            <div class="cities">
+                <span id="newCities"></span>
+                <select class="add-city" id="newCitySelect" aria-label="Dodaj miasto">
+                    <option value="">+ Dodaj miasto</option>
+                    @foreach (var city in Model.AvailableCities)
+                    {
+                        <option>@city</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </form>
+
+    <div class="drawer-foot">
+        <button class="btn" id="userCancel" type="button">Anuluj</button>
+        <button class="btn dark" type="submit" form="userForm">Utwórz konto</button>
+    </div>
+</aside>    
