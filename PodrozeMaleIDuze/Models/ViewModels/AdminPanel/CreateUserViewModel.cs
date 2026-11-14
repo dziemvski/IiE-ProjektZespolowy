@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PodrozeMaleIDuze.Models.ViewModels.Admin;
+namespace PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
 
 public class CreateUserViewModel
 {

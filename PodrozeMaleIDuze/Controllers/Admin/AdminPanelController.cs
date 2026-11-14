@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PodrozeMaleIDuze.Constants;
-using PodrozeMaleIDuze.Models.ViewModels.Admin;
 using PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
 
 namespace PodrozeMaleIDuze.Controllers.Admin;
@@ -27,10 +26,6 @@ public class AdminPanelController : Controller
                 {
                     Id = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "1",
                     UserName = "admin123", Email = "admin123@gmail.com", Role = Roles.Admin
-                },
-                new AdminUserRowViewModel
-                {
-                    Id = "1", UserName = "admin123", Email = "admin123@gmail.com", Role = Roles.Admin
                 },
                 new AdminUserRowViewModel
                 {

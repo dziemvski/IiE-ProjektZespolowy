@@ -1,6 +1,4 @@
-﻿using PodrozeMaleIDuze.Models.ViewModels.Admin;
-
-namespace PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
+﻿namespace PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
 
 public class AdminPanelViewModel
 {
