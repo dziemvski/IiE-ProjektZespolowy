@@ -15,9 +15,10 @@
     margin: 0;
     padding: 0;
 }
-
 html, body {
     height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -40,7 +41,7 @@ button {
     color: inherit;
 }
 
-/* =============== MAPA (70%) =============== */
+/* mapa */
 .map-area {
     position: relative;
     overflow: hidden;
@@ -50,6 +51,9 @@ button {
 #map {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFFF !important;
 }
 
     #map.picking .maplibregl-canvas {
@@ -298,7 +302,7 @@ button {
         pointer-events: auto;
     }
 
-/* =============== KARTA MIEJSCA =============== */
+/* karta miejsca */
 .sheet {
     position: absolute;
     left: 0;
@@ -557,7 +561,7 @@ button {
         stroke: var(--ink);
     }
 
-/* =============== PANEL (30%) =============== */
+/* panel */
 .panel {
     height: 100vh;
     overflow-y: auto;
@@ -1041,7 +1045,7 @@ body.is-admin .admin {
         stroke: currentColor;
     }
 
-/* =============== GALERIA =============== */
+/* galeria */
 .gallery {
     position: fixed;
     inset: 0;
