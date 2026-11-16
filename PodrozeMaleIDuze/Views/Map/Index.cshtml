@@ -36,10 +36,111 @@
             color: var(--ink);
         }
 
-        #map {
+        .map-area {
             flex: 1;
+            position: relative;
             height: 100%;
-            background: #EDEAE2;
+            overflow: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            background-color: #F5F1E8;
+            background-image: linear-gradient(rgba(248, 185, 122, .18) 1px, transparent 1px), linear-gradient(90deg, rgba(248, 185, 122, .18) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+
+        .brand-pill {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            padding: 12px 20px;
+            background: #fff;
+            border-radius: 999px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        .reset-btn {
+            position: absolute;
+            top: 30px;
+            right: 76px;
+            z-index: 1000;
+            padding: 6px 14px;
+            background: #fff;
+            border: none;
+            border-radius: 999px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+            .reset-btn:hover {
+                color: var(--ink);
+            }
+
+        .legend {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 16px;
+            max-width: calc(100% - 40px);
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, .85);
+            border-radius: 12px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+            .legend span {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .legend i {
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                display: inline-block;
+            }
+
+   
+        .pin {
+            background: none;
+            border: none;
+        }
+
+            .pin svg {
+                filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .2));
+            }
+
+        .leaflet-bar {
+            border: none !important;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .08) !important;
+        }
+
+            .leaflet-bar a {
+                background: #fff;
+                color: var(--ink);
+            }
+
+        .leaflet-container {
+            font-family: "Inter Tight", system-ui, sans-serif;
         }
 
         .panel {
@@ -213,7 +314,12 @@
 </head>
 <body>
 
-    <div id="map"></div>
+    <div class="map-area">
+        <div id="map"></div>
+        <a class="brand-pill" asp-controller="Home" asp-action="Index">Podróże Małe i Duże</a>
+        <button type="button" class="reset-btn" id="resetBtn">Cała Polska</button>
+        <div class="legend" id="legend"></div>
+    </div>
 
     <aside class="panel">
         <a class="brand" asp-controller="Home" asp-action="Index">Podróże Małe i Duże</a>
@@ -281,11 +387,51 @@
           { id: 11, name: 'Muzeum Powstania Warszawskiego', cat: 'Muzea', city: 'Warszawa', region: 'mazowieckie', lat: 52.2325, lon: 20.9810, desc: 'Interaktywne muzeum poświęcone powstaniu z 1944 roku.' }
         ];
 
-        const map = L.map('map').setView([52.0, 19.4], 6);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+                const POLAND_BOUNDS = L.latLngBounds([48.9, 14.1], [54.9, 24.2]);
+        let polandBounds = POLAND_BOUNDS;
+
+        const map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false,
+            zoomSnap: 0.25,
+            maxZoom: 12,
+            maxBoundsViscosity: 1.0
+        });
+        L.control.zoom({ position: 'topright' }).addTo(map);
+        map.fitBounds(POLAND_BOUNDS);
+
+        fetch('/data/wojewodztwa.json')
+            .then(r => r.json())
+            .then(geo => {
+                L.geoJSON(geo, {
+                    interactive: false,
+                    style: { fillColor: '#FFFBF3', fillOpacity: 1, color: '#F3D3B0', weight: 1 }
+                }).addTo(map);
+
+                const outline = L.geoJSON(geo, {
+                    interactive: false,
+                    style: { fill: false, color: '#F8B97A', weight: 3 }
+                }).addTo(map);
+
+                polandBounds = outline.getBounds();
+                map.fitBounds(polandBounds, { padding: [20, 20] });
+                map.setMinZoom(map.getZoom());
+                map.setMaxBounds(polandBounds.pad(0.25));
+            })
+            .catch(err => console.error('Nie udało się wczytać granic Polski:', err));
+
+        document.getElementById('resetBtn').onclick = () =>
+            map.flyToBounds(polandBounds, { padding: [20, 20] });
+
+        // legenda
+        const legendEl = document.getElementById('legend');
+        Object.keys(CATS).forEach(c => {
+            const s = document.createElement('span');
+            const i = document.createElement('i');
+            i.style.background = CATS[c];
+            s.append(i, c);
+            legendEl.append(s);
+        });
 
         const listEl = document.getElementById('list');
         const countEl = document.getElementById('count');
@@ -302,8 +448,20 @@
           return e;
         }
 
+                function pinIcon(color) {
+          return L.divIcon({
+            className: 'pin',
+            html: '<svg width="28" height="36" viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg">' +
+                  '<path d="M14 0C6.3 0 0 6.2 0 13.8 0 24 14 36 14 36s14-12 14-22.2C28 6.2 21.7 0 14 0z" fill="' + color + '"/>' +
+                  '<circle cx="14" cy="13.5" r="5" fill="#fff"/></svg>',
+            iconSize: [28, 36],
+            iconAnchor: [14, 36],
+            popupAnchor: [0, -32]
+          });
+        }
+
         function makeMarker(p) {
-          const m = L.circleMarker([p.lat, p.lon], { radius: 9, color: '#ffffff', weight: 2, fillColor: CATS[p.cat], fillOpacity: 1 });
+          const m = L.marker([p.lat, p.lon], { icon: pinIcon(CATS[p.cat]) });
           const box = el('div', 'pop');
           box.append(el('b', '', p.name), el('small', '', p.cat + ' · ' + p.city + ' · ' + p.region), el('p', '', p.desc));
           const g = el('a', '', 'Otwórz w Google Maps');
@@ -354,7 +512,6 @@
         });
         qEl.oninput = () => { query = qEl.value; render(); };
 
-        // panel administratora (istnieje na stronie tylko dla roli Admin)
         const form = document.getElementById('placeForm');
         if (form) {
           const msg = document.getElementById('msg');
