@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PodrozeMaleIDuze.Models;
+using PodrozeMaleIDuze.Models.ViewModels.RegisterView;
 using PodrozeMaleIDuze.Services.Auth;
 
 namespace PodrozeMaleIDuze.Controllers;

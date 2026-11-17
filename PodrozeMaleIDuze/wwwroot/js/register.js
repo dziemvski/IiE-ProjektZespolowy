@@ -1,13 +1,8 @@
-﻿
-document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", () => {
     const haslo = document.getElementById("Password");
-    const powtorzHaslo = document.getElementById("ConfirmPassword");
-
     const pasek = document.getElementById("passwordStrengthBar");
     const opis = document.getElementById("passwordStrengthText");
-    const bladHasla = document.getElementById("confirmLiveError");
 
-  
     document.querySelectorAll("[data-password-toggle]")
         .forEach(przycisk => {
             przycisk.addEventListener("click", () => {
@@ -28,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-  
     function sprawdzHaslo() {
         if (!haslo || !pasek || !opis) return;
 
@@ -61,23 +55,9 @@ document.addEventListener("DOMContentLoaded", () => {
             pasek.style.background = "#5F9678";
             opis.textContent = "Hasło ma dobrą długość";
         }
-
-        sprawdzPowtorzenie();
-    }
-
-    function sprawdzPowtorzenie() {
-        if (!powtorzHaslo || !haslo || !bladHasla) return;
-
-        if (powtorzHaslo.value &&
-            powtorzHaslo.value !== haslo.value) {
-            bladHasla.textContent = "Hasła nie są takie same.";
-        } else {
-            bladHasla.textContent = "";
-        }
     }
 
     haslo?.addEventListener("input", sprawdzHaslo);
-    powtorzHaslo?.addEventListener("input", sprawdzPowtorzenie);
 
     const formularz = document.getElementById("registerForm");
     const zgoda = document.getElementById("AcceptPrivacy");
@@ -109,8 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     link?.addEventListener("click", event => {
         event.preventDefault();
 
-        const przyciskPolityki =
-            document.getElementById("privacyBtn");
+        const przyciskPolityki = document.getElementById("privacyBtn");
 
         if (przyciskPolityki?.getAttribute("aria-expanded") !== "true") {
             przyciskPolityki?.click();

@@ -1,7 +1,6 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace PodrozeMaleIDuze.Models;
+namespace PodrozeMaleIDuze.Models.ViewModels.RegisterView;
 
 public class RegisterViewModel
 {
@@ -47,12 +46,4 @@ public class RegisterViewModel
     [MustBeTrue(
         ErrorMessage = "Zaakceptuj politykę prywatności, aby założyć konto.")]
     public bool AcceptPrivacy { get; set; }
-}
-
-public sealed class MustBeTrueAttribute : ValidationAttribute
-{
-    public override bool IsValid(object? value)
-    {
-        return value is true;
-    }
 }
