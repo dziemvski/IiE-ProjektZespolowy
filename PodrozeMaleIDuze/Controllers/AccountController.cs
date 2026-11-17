@@ -60,4 +60,15 @@ public class AccountController(IAuthService authService) : Controller
         await authService.LogoutAsync();
         return RedirectToAction("Index", "Home");
     }
+
+    // GET /Account/Register
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Register()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+            return RedirectToAction("Index", "Home");
+
+        return View(new RegisterViewModel());
+    }
 }
