@@ -10,15 +10,18 @@ public class CreateUserViewModel
     public string UserName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Wpisz adres e-mail.")]
+    [StringLength(254, ErrorMessage = "Adres e-mail może mieć maksymalnie 254 znaki.")]
     [EmailAddress(ErrorMessage = "To nie wygląda na adres e-mail.")]
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Wpisz hasło startowe.")]
-    [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d).{8,64}$",
-        ErrorMessage = "Hasło musi mieć min. 8 znaków, literę i cyfrę.")]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$",
+        ErrorMessage = "Hasło musi mieć 8–64 znaków, małą literę, wielką literę i cyfrę.")]
     public string Password { get; set; } = string.Empty;
 
-    [Required] public string Role { get; set; } = "User";
+    [Required]
+    [RegularExpression(@"^(Admin|CityAdmin|User)$", ErrorMessage = "Wybierz prawidłową rolę.")]
+    public string Role { get; set; } = "User";
 
     public List<string> Cities { get; set; } = new();
 

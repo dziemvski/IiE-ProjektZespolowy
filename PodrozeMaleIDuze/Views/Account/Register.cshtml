@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Rejestracja";
     Layout = "_AuthLayout";
+    var minBirthDate = new DateOnly(1900, 1, 1).ToString("yyyy-MM-dd");
+    var maxBirthDate = DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd");
 }
 
 <form asp-controller="Account"
@@ -165,6 +167,8 @@
             <div class="input">
                 <input asp-for="DateOfBirth"
                        type="date"
+                       min="@minBirthDate"
+                       max="@maxBirthDate"
                        autocomplete="bday"/>
             </div>
             <span asp-validation-for="DateOfBirth"></span>
