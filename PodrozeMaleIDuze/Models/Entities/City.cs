@@ -1,16 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using PodrozeMaleIDuze.Models.Validation;
+
 namespace PodrozeMaleIDuze.Models;
 
 public class City
 {
     public int Id { get; set; }
 
-    [Required]
+    [Required, NotWhitespace]
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
 
-    [Required]
+    [Required, NotWhitespace]
     [MaxLength(50)]
     public string Region { get; set; } = string.Empty;
 

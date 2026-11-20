@@ -1,0 +1,141 @@
+@using System.Security.Claims
+@using PodrozeMaleIDuze.Constants
+@model PodrozeMaleIDuze.Models.ViewModels.AdminPanel.AdminPanelViewModel
+@{
+    ViewData["Title"] = "Panel admina";
+    var roleLabels = new Dictionary<string, string>
+    {
+        [Roles.User] = "Użytkownik", [Roles.CityAdmin] = "Admin miasta", [Roles.Admin] = "Admin"
+    };
+    int Count(string role) => Model.Users.Count(u => u.Role == role);
+    var cityAdmins = Model.Users.Where(u => u.Role == Roles.CityAdmin).ToList();
+    var adminCities = cityAdmins.SelectMany(u => u.Cities).Distinct().OrderBy(c => c).ToList();
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true"/>
+}
+
+<div class="admin">
+    <p class="eyebrow">Administracja</p>
+    <h1>Panel admina</h1>
+    <p class="lead">Nadawaj role użytkownikom i przypisuj adminom miast miasta, w których mogą dodawać i edytować
+        miejsca.</p>
+
+    <div class="stats">
+        <div class="stat"><b>@Model.Users.Count</b><span>kont łącznie</span></div>
+        <div class="stat"><b>@Count(Roles.User)</b><span><i class="dot-user"></i>użytkowników</span></div>
+        <div class="stat"><b>@Count(Roles.CityAdmin)</b><span><i
+                    class="dot-city"></i>adminów miast · @adminCities.Count miast</span></div>
+        <div class="stat"><b>@Count(Roles.Admin)</b><span><i class="dot-admin"></i>adminów</span></div>
+    </div>
+
+    <div class="tabs">
+        <button type="button" data-tab="tabUsers" class="on">Użytkownicy</button>
+        <button type="button" data-tab="tabCities">Miasta i ich admini</button>
+    </div>
+
+    <div id="tabUsers">
+        <div class="toolbar">
+            <label class="search">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round">
+                    <circle cx="11" cy="11" r="6.5"/>
+                    <path d="m20 20-4.2-4.2"/>
+                </svg>
+                <input id="q" placeholder="Szukaj po nazwie lub e-mailu…">
+            </label>
+            <div class="seg" id="filter">
+                <button type="button" data-f="" class="on">Wszyscy</button>
+                <button type="button" data-f="@Roles.User">Użytkownicy</button>
+                <button type="button" data-f="@Roles.CityAdmin">Admini miast</button>
+                <button type="button" data-f="@Roles.Admin">Admini</button>
+            </div>
+            <button class="btn-add" id="addUser" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Nowy użytkownik
+            </button>
+        </div>
+
+        <div class="table">
+            <div class="thead">
+                <span>Użytkownik</span><span>Rola</span><span>Miasta (admin miasta)</span><span>Status</span><span></span>
+            </div>
+            <div class="empty" id="empty" hidden>Brak użytkowników dla tych filtrów.</div>
+            @foreach (var user in Model.Users)
+            {
+                var isMe = user.Id == currentUserId;
+                <div class="tr" data-role="@user.Role">
+                    <div class="user">
+                        <span class="av">@user.UserName[..1].ToUpper()</span>
+                        <div>
+                            <b>@user.UserName
+                                @if (isMe)
+                                {
+                                    <span class="you">to Ty</span>
+                                }</b>
+                            <small>@user.Email</small>
+                        </div>
+                    </div>
+                    // TODO(backend): obsłużyć użytkownika bez roli lub z nieznaną rolą (etykieta w Index.cshtml)
+                    <span class="role-tag">@roleLabels[user.Role]</span>
+                    <div class="cities">
+                        @if (user.Role == Roles.CityAdmin)
+                        {
+                            foreach (var city in user.Cities)
+                            {
+                                <span class="chip chip-static">@city</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="na">— dotyczy tylko adminów miast</span>
+                        }
+                    </div>
+                    <span
+                        class="status @(user.IsEnabled ? "" : "off")">@(user.IsEnabled ? "Aktywny" : "Zablokowany")</span>
+                    <a asp-action="Details" asp-route-id="@user.Id" class="details-link">Szczegóły</a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div id="tabCities" hidden>
+        @if (adminCities.Count == 0)
+        {
+            <div class="table">
+                <div class="empty">Żadne miasto nie ma jeszcze admina. Nadaj komuś rolę „Admin miasta" w zakładce
+                    Użytkownicy.
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="city-grid">
+                @foreach (var city in adminCities)
+                {
+                    var admins = cityAdmins.Where(u => u.Cities.Contains(city)).ToList();
+                    <div class="city-card">
+                        <h3>@city</h3>
+                        <p>@admins.Count @(admins.Count == 1 ? "admin" : "adminów") miasta</p>
+                        <ul>
+                            @foreach (var admin in admins)
+                            {
+                                <li><span class="av">@admin.UserName[..1].ToUpper()</span>@admin.UserName</li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <partial name="_CreateUserDrawer" model="Model.NewUser"/>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+}

@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using PodrozeMaleIDuze.Models.Validation;
+
 namespace PodrozeMaleIDuze.Models;
 
 public class Place
 {
     public int Id { get; set; }
 
-    [Required] [MaxLength(100)] public string Name { get; set; } = string.Empty;
+    [Required, NotWhitespace] [MaxLength(100)] public string Name { get; set; } = string.Empty;
 
     [MaxLength(1000)] public string? Description { get; set; }
 
@@ -23,7 +25,7 @@ public class Place
     public int CategoryId { get; set; }
     public Category Category { get; set; } = null!;
 
-    [Required] public string CreatedByUserId { get; set; } = string.Empty;
+    [Required, NotWhitespace] public string CreatedByUserId { get; set; } = string.Empty;
     public ApplicationUser CreatedByUser { get; set; } = null!;
     public ICollection<PlaceImage> Images { get; set; } = new List<PlaceImage>();
     public ICollection<SavedPlace> SavedBy { get; set; } = new List<SavedPlace>();

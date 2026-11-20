@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;800&display=swap"
         rel="stylesheet">
+  <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true"/>
   <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true"/>
 </head>
 <body>
@@ -31,103 +32,15 @@
 </header>
 
 <main class="auth">
-  <canvas id="bgGlobe" aria-hidden="true"></canvas>
+  <canvas id="bgGlobe" data-globe aria-hidden="true"></canvas>
 
   @RenderBody()
 </main>
 
-<footer class="footer" id="stopka">
-  <div class="footer-bar">
-    <a asp-controller="Home" asp-action="Index" class="brand" title="Strona główna">
-      <svg viewBox="0 0 32 32" fill="none" stroke="#F8B97A" stroke-width="1.8">
-        <circle cx="16" cy="16" r="7.5"/>
-        <ellipse cx="16" cy="16" rx="14" ry="4.6" transform="rotate(-18 16 16)"/>
-      </svg>
-      Podróże Małe i Duże
-    </a>
-    <button class="privacy-btn" id="privacyBtn" aria-expanded="false" aria-controls="privacyWrap">
-      Polityka prywatności
-      <svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-        <path d="M2.5 4.5 6 8l3.5-3.5"/>
-      </svg>
-    </button>
-    <span>© 2026 · Projekt zespołowy, Politechnika Białostocka</span>
-  </div>
-
-  <div class="privacy-wrap" id="privacyWrap">
-    <div class="privacy-inner">
-      <div class="privacy">
-        <aside>
-          <p class="eyebrow">Dokument</p>
-          <h2>Polityka prywatności</h2>
-          <p>Ostatnia aktualizacja: listopad 2026</p>
-        </aside>
-        <ol>
-          <li>
-            <div>
-              <h3>Kto odpowiada za Twoje dane</h3>
-              <p>Administratorem danych jest zespół projektowy serwisu Podróże Małe i Duże, realizujący projekt w ramach
-                zajęć na Wydziale Informatyki Politechniki Białostockiej.</p>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>Jakie dane zbieramy</h3>
-              <p>Zbieramy tylko to, co jest potrzebne do działania serwisu:</p>
-              <ul>
-                <li>adres e-mail i nazwę wyświetlaną podane przy rejestracji,</li>
-                <li>hasło, przechowywane wyłącznie w postaci zaszyfrowanego skrótu,</li>
-                <li>zapisane miejsca, oznaczenia „odwiedzone” oraz utworzone trasy,</li>
-                <li>datę założenia konta i podstawowe dane techniczne potrzebne do logowania.</li>
-              </ul>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>Po co ich używamy</h3>
-              <p>Dane służą do prowadzenia Twojego konta, logowania, zapisywania ulubionych miejsc i tras oraz do
-                zapewnienia bezpieczeństwa serwisu.</p>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>Podstawa prawna</h3>
-              <p>Dane przetwarzamy zgodnie z RODO, na podstawie art. 6 ust. 1 lit. b oraz art. 6 ust. 1 lit. f.</p>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>Pliki cookies i pamięć przeglądarki</h3>
-              <p>Używamy wyłącznie niezbędnego pliku cookie sesji, który utrzymuje Cię zalogowanym.</p>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>Komu przekazujemy dane</h3>
-              <p>Nikomu nie sprzedajemy ani nie udostępniamy Twoich danych.</p>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>Jak długo je przechowujemy</h3>
-              <p>Dane przechowujemy do czasu usunięcia konta.</p>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>Twoje prawa</h3>
-              <p>Masz prawo dostępu do swoich danych, ich poprawienia, usunięcia, ograniczenia przetwarzania,
-                przeniesienia oraz wniesienia sprzeciwu.</p>
-            </div>
-          </li>
-        </ol>
-      </div>
-    </div>
-  </div>
-</footer>
+<partial name="_Footer"/>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/js/auth.js" asp-append-version="true"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

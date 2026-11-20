@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using PodrozeMaleIDuze.Models.Validation;
+
 namespace PodrozeMaleIDuze.Models;
 
 public class Trip
 {
     public int Id { get; set; }
 
-    [Required]
+    [Required, NotWhitespace]
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
 
@@ -17,7 +19,7 @@ public class Trip
     public bool IsCompleted { get; set; }
     public DateTime? CompletedAt { get; set; }
 
-    [Required]
+    [Required, NotWhitespace]
     public string UserId { get; set; } = string.Empty;
     public ApplicationUser User { get; set; } = null!;
 
