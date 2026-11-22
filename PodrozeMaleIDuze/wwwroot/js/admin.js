@@ -8,6 +8,7 @@ $$('.tabs button').forEach(btn => btn.addEventListener('click', () => {
 }));
 
 let roleFilter = '';
+
 function applyFilter() {
     const query = $('#q').value.trim().toLowerCase();
     let visible = 0;
@@ -19,6 +20,7 @@ function applyFilter() {
     });
     $('#empty').hidden = visible > 0;
 }
+
 $('#q').addEventListener('input', applyFilter);
 $$('#filter button').forEach(btn => btn.addEventListener('click', () => {
     $$('#filter button').forEach(b => b.classList.toggle('on', b === btn));
@@ -32,29 +34,36 @@ function toggleDrawer(open) {
     $('#drawer').setAttribute('aria-hidden', String(!open));
     if (open) setTimeout(() => $('#UserName').focus(), 250);
 }
+
 $('#addUser').addEventListener('click', () => toggleDrawer(true));
 ['#drawerClose', '#userCancel', '#drawerBg'].forEach(s => $(s).addEventListener('click', () => toggleDrawer(false)));
-document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleDrawer(false); });
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') toggleDrawer(false);
+});
 
 const ROLE_DESC = {
     User: 'Przegląda mapę, zapisuje ulubione miejsca i trasy.',
     CityAdmin: 'Dodaje i edytuje miejsca tylko w przypisanych miastach.',
     Admin: 'Pełny dostęp, w tym ten panel i wszystkie miejsca.'
 };
+
 function setRole(role) {
     $('#Role').value = role;
     $$('#newRole button').forEach(b => b.classList.toggle('on', b.dataset.r === role));
     $('#roleDesc').textContent = ROLE_DESC[role];
     $('#newCitiesWrap').hidden = role !== 'CityAdmin';
 }
+
 $$('#newRole button').forEach(b => b.addEventListener('click', () => setRole(b.dataset.r)));
 setRole($('#Role').value || 'User');
 
 const pw = $('#Password');
+
 function showPassword(show) {
     pw.type = show ? 'text' : 'password';
     $('#pwShow').textContent = show ? 'Ukryj' : 'Pokaż';
 }
+
 $('#pwShow').addEventListener('click', () => showPassword(pw.type === 'password'));
 pw.addEventListener('input', () => {
     const v = pw.value;
@@ -67,8 +76,12 @@ $('#pwGen').addEventListener('click', () => {
     const chars = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!?#%';
     const pick = () => chars[crypto.getRandomValues(new Uint32Array(1))[0] % chars.length];
     let value;
-    do { value = Array.from({ length: 12 }, pick).join(''); } while (!/\d/.test(value) || !/[a-z]/.test(value));
+    do {
+        value = Array.from({length: 12}, pick).join('');
+    } while (!/\d/.test(value) || !/[a-z]/.test(value));
     pw.value = value;
     showPassword(true);
     pw.dispatchEvent(new Event('input'));
 });
+
+if ($('#drawer').dataset.open === 'true') toggleDrawer(true);

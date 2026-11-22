@@ -1,7 +1,8 @@
 @model PodrozeMaleIDuze.Models.ViewModels.AdminPanel.CreateUserViewModel
 
 <div class="drawer-bg" id="drawerBg"></div>
-<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true"
+       data-open="@(ViewData["OpenDrawer"] is true ? "true" : "false")">
     <div class="drawer-head">
         <div><p class="eyebrow">Nowe konto</p>
             <h2 id="drawerTitle">Utwórz użytkownika</h2></div>
@@ -13,6 +14,7 @@
     </div>
 
     <form id="userForm" asp-controller="AdminPanel" asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="form-errors" role="alert"></div>
         <label class="fld"><span>Nazwa użytkownika</span>
             <input asp-for="UserName" maxlength="30" autocomplete="off" spellcheck="false"
                    placeholder="np. jan.kowalski">
