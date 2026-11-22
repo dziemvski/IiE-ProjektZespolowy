@@ -18,6 +18,7 @@ public static class DbSeeder
         await context.Database.MigrateAsync();
         await SeedRolesAsync(roleManager);
         await SeedAdminAsync(userManager, configuration, logger);
+        await SeedCitiesAsync(context);
     }
 
     private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
@@ -84,5 +85,20 @@ public static class DbSeeder
             var errors = string.Join("; ", result.Errors.Select(e => e.Description));
             throw new InvalidOperationException($"{message}: {errors}");
         }
+    }
+
+    private static async Task SeedCitiesAsync(AppDbContext context)
+    {
+        if (await context.Cities.AnyAsync())
+            return;
+
+        context.Cities.AddRange(
+            new City { Name = "Białystok", Region = "podlaskie" },
+            new City { Name = "Gdańsk", Region = "pomorskie" },
+            new City { Name = "Kraków", Region = "małopolskie" },
+            new City { Name = "Warszawa", Region = "mazowieckie" },
+            new City { Name = "Wrocław", Region = "dolnośląskie" });
+
+        await context.SaveChangesAsync();
     }
 }

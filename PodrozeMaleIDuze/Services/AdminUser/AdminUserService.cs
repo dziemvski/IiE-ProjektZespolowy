@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PodrozeMaleIDuze.Constants;
 using PodrozeMaleIDuze.Data;
@@ -41,22 +42,17 @@ public class AdminUserService(UserManager<ApplicationUser> userManager, AppDbCon
         var cities = await context.Cities
             .AsNoTracking()
             .OrderBy(c => c.Name)
-            .Select(c => c.Name)
             .ToListAsync();
 
         return new AdminPanelViewModel
         {
-            Cities = cities,
-            NewUser = new CreateUserViewModel { AvailableCities = cities },
-            Users = users.Select(u => new AdminUserRowViewModel
+            Cities = cities.Select(c => c.Name).ToList(),
+            NewUser = new CreateUserViewModel
             {
-                Id = u.Id,
-                UserName = u.UserName ?? string.Empty,
-                Email = u.Email ?? string.Empty,
-                Role = roleByUserId.GetValueOrDefault(u.Id, Roles.User),
-                Cities = u.ManagedCity is null ? new List<string>() : new List<string> { u.ManagedCity.Name },
-                IsEnabled = IsEnabled(u)
-            }).ToList()
+                AvailableCities = cities
+                    .Select(c => new SelectListItem(c.Name, c.Id.ToString()))
+                    .ToList()
+            },
         };
     }
 
