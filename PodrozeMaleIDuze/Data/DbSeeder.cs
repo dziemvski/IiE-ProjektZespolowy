@@ -21,8 +21,6 @@ public static class DbSeeder
         await SeedCityAdminAsync(userManager, configuration, logger);
     }
 
-    // Testowe konto admina miasta - tworzone tylko gdy w konfiguracji (user-secrets)
-    // są SeedCityAdmin:Email i SeedCityAdmin:Password.
     private static async Task SeedCityAdminAsync(UserManager<ApplicationUser> userManager,
         IConfiguration configuration, ILogger logger)
     {

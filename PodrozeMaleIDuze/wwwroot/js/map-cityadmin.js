@@ -1,15 +1,11 @@
-// Widok mapy dla admina miasta (ładowany po map.js, tylko dla roli CityAdmin).
-// Korzysta ze wspólnej mapy przez window.MapApp i jej punkty zaczepienia (hooks).
 (() => {
     const caEl = document.getElementById('cityAdmin');
     if (!caEl || !window.MapApp) return;
 
     const {map, places, CATS, markers, hooks, el, render, dropMarker} = window.MapApp;
 
-    // jeden admin = jedno miasto (ApplicationUser.ManagedCityId)
     const managedCity = caEl.dataset.city || null;
 
-    // współrzędne miast do wyboru lokalizacji (docelowo z bazy)
     const CITIES = {
         'Białystok': {region: 'podlaskie', lat: 53.1325, lon: 23.1688},
         'Gdańsk': {region: 'pomorskie', lat: 54.3520, lon: 18.6466},
@@ -17,7 +13,6 @@
         'Warszawa': {region: 'mazowieckie', lat: 52.2297, lon: 21.0122}
     };
 
-    // ilustracje z kart na stronie głównej (Home/Index)
     const ILL = {
         castle: 'M18 126H202M45 126V57H63V126M157 126V57H175V126M63 126V77H157V126M97 77V28L110 10L123 28V77M97 28H123M103 126V104Q110 90 117 104V126M75 95V104M145 95V104M51 57V49H57V57M163 57V49H169V57M97 52H123',
         peaks: 'M15 113L67 48L93 75L126 32L163 81L183 60L211 113M40 123Q110 104 180 123Q110 139 40 123ZM65 123H85M120 119H150',
@@ -25,13 +20,11 @@
     };
     const CAT_ILL = {Góry: 'peaks', Woda: 'peaks', Natura: 'forest'};
 
-    const favs = new Set([12]); // TODO(backend): ulubione zalogowanego użytkownika
-    let origin = null;          // {name, lat, lon}
+    const favs = new Set([12]);
+    let origin = null;
     let radiusKm = 50;
     let rangeLayer = null;
     let editingId = null;
-
-    // ===== pomocnicze =====
 
     function svgIcon(paths, viewBox = '0 0 24 24', width = 1.7) {
         const ns = 'http://www.w3.org/2000/svg';
@@ -64,8 +57,6 @@
         if (markers[p.id] && map.hasLayer(markers[p.id])) markers[p.id].openPopup();
     }
 
-    // ===== podpięcie pod wspólną mapę =====
-
     hooks.filter = p => !origin || distKm(p) <= radiusKm;
     hooks.count = shown => shown.length + ' ' + plural(shown.length, 'miejsce', 'miejsca', 'miejsc') +
         ' w promieniu ' + radiusKm + ' km';
@@ -92,7 +83,6 @@
 
     map.zoomControl.setPosition('topright');
 
-    // kolorowe kropki na filtrach kategorii
     document.querySelectorAll('#chips .chip').forEach(b => {
         if (!b.dataset.cat) return;
         const dot = el('i');
@@ -100,7 +90,6 @@
         b.prepend(dot);
     });
 
-    // legenda na mapie
     const legend = document.getElementById('legend');
     Object.entries(CATS).forEach(([c, color]) => {
         const s = el('span');
@@ -109,8 +98,6 @@
         s.append(dot, c);
         legend.append(s);
     });
-
-    // ===== najpopularniejsze i ulubione =====
 
     function miniCard(p) {
         const card = el('button', 'mini-card');
@@ -139,8 +126,6 @@
         rail.replaceChildren(...list.map(miniCard));
         if (!list.length) rail.append(el('p', 'rail-empty', 'Nie masz jeszcze ulubionych miejsc.'));
     }
-
-    // ===== lokalizacja i promień =====
 
     function setOrigin(o) {
         origin = o;
@@ -200,8 +185,6 @@
         }, {timeout: 10000});
     };
 
-    // ===== zarządzanie miejscami w mieście admina =====
-
     const caForm = document.getElementById('caForm');
     const addBtn = document.getElementById('addPlace');
     const submitBtn = document.getElementById('caSubmit');
@@ -217,7 +200,6 @@
         editingId = p ? p.id : null;
         caForm.reset();
         caMsg.textContent = '';
-        // miasto i województwo są stałe - wynikają z miasta przypisanego adminowi
         f.city.value = managedCity;
         f.region.value = (CITIES[managedCity] || {}).region || '';
         if (p) {
@@ -285,7 +267,6 @@
             lon: lon,
             desc: f.desc.value.trim()
         };
-        // TODO(backend): zapis przez API
         if (editingId !== null) {
             Object.assign(places.find(p => p.id === editingId), data);
             dropMarker(editingId);
@@ -323,7 +304,6 @@
             del.title = 'Usuń';
             del.append(svgIcon(['M4 7h16', 'M10 11v6M14 11v6', 'M6 7l1 13h10l1-13', 'M9 7V4h6v3']));
             del.onclick = () => {
-                // pierwsze kliknięcie pyta, drugie usuwa (bez okna confirm)
                 if (!del.classList.contains('confirm')) {
                     del.classList.add('confirm');
                     del.title = 'Kliknij ponownie, aby usunąć';
@@ -333,7 +313,6 @@
                     }, 3000);
                     return;
                 }
-                // TODO(backend): usuwanie przez API
                 places.splice(places.indexOf(p), 1);
                 favs.delete(p.id);
                 dropMarker(p.id);
@@ -345,7 +324,6 @@
         });
     }
 
-    // start: lokalizacja = miasto admina
     const start = CITIES[managedCity] ? managedCity : Object.keys(CITIES)[0];
     citySel.value = start;
     setOrigin(fromCity(start));

@@ -1,5 +1,4 @@
 @model PodrozeMaleIDuze.Models.ViewModels.Map.MapViewModel
-@* Panel boczny mapy dla admina miasta. Logika: wwwroot/js/map-cityadmin.js *@
 @{
     var userName = User.Identity?.Name ?? string.Empty;
     var initial = string.IsNullOrEmpty(userName) ? "?" : userName[..1].ToUpper();

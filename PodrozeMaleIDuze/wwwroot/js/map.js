@@ -120,7 +120,6 @@ const places = [
         lon: 20.9810,
         desc: 'Interaktywne muzeum poświęcone powstaniu z 1944 roku.'
     },
-    // okolice Białegostoku (pop = umowna popularność, docelowo z bazy)
     {
         id: 12,
         name: 'Pałac Branickich',
@@ -236,12 +235,11 @@ const markers = {};
 let activeCat = '';
 let query = '';
 
-// punkty zaczepienia dla skryptów rozszerzających mapę (np. map-cityadmin.js)
 const hooks = {
-    filter: () => true,   // (p) => czy pokazać miejsce (dodatkowy warunek)
-    popup: () => {},      // (p, box) => dodatkowe elementy w dymku markera
-    count: null,          // (shown) => własny tekst licznika
-    afterRender: () => {} // (shown) => wywoływane po każdym odświeżeniu
+    filter: () => true,
+    popup: () => {},
+    count: null,
+    afterRender: () => {}
 };
 
 function el(tag, cls, text) {
@@ -383,9 +381,6 @@ if (form) {
     };
 }
 
-// udostępnione dla map-cityadmin.js
 window.MapApp = {map, places, CATS, markers, hooks, el, render, dropMarker};
 
-// pierwsze rysowanie po wczytaniu wszystkich skryptów, żeby rozszerzenia
-// zdążyły ustawić swoje hooks
 document.addEventListener('DOMContentLoaded', render);

@@ -207,10 +207,6 @@ input, select, textarea {
 .pop p {
     margin: 6px 0;
 }
-/* ===== Widok admina miasta (.panel.ca) =====
-   Wzorce przeniesione z admin.css (av, seg, search, btn-add, fld)
-   oraz site.css (ilustracje kart miejsc). */
-
 .map-brand {
     position: absolute;
     top: 20px;
