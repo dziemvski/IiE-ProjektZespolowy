@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PodrozeMaleIDuze.Models;
+using PodrozeMaleIDuze.Models.ViewModels.RegisterView;
 using PodrozeMaleIDuze.Services.Auth;
 
 namespace PodrozeMaleIDuze.Controllers;
@@ -59,5 +60,16 @@ public class AccountController(IAuthService authService) : Controller
     {
         await authService.LogoutAsync();
         return RedirectToAction("Index", "Home");
+    }
+
+    // GET /Account/Register
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Register()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+            return RedirectToAction("Index", "Home");
+
+        return View(new RegisterViewModel());
     }
 }
