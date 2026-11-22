@@ -1,11 +1,10 @@
-﻿using PodrozeMaleIDuze.DTO.Response.Users;
-using PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
+﻿using PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
 
 namespace PodrozeMaleIDuze.Services.AdminUser;
 
 public interface IAdminUserService
 {
-    Task<IReadOnlyList<UsersListDto>> GetAllUsers();
+    Task<IReadOnlyList<UserListItemViewModel>> GetAllUsers();
 
     Task<AdminPanelViewModel> GetPanelAsync();
 

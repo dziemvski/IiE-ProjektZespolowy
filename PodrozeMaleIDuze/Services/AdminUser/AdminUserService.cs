@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using PodrozeMaleIDuze.Constants;
 using PodrozeMaleIDuze.Data;
-using PodrozeMaleIDuze.DTO.Response.Users;
 using PodrozeMaleIDuze.Models;
 using PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
 
@@ -10,13 +9,13 @@ namespace PodrozeMaleIDuze.Services.AdminUser;
 
 public class AdminUserService(UserManager<ApplicationUser> userManager, AppDbContext context) : IAdminUserService
 {
-    public async Task<IReadOnlyList<UsersListDto>> GetAllUsers()
+    public async Task<IReadOnlyList<UserListItemViewModel>> GetAllUsers()
     {
         return await userManager.Users
             .AsNoTracking()
             .OrderBy(u => u.LastName)
             .ThenBy(u => u.FirstName)
-            .Select(u => new UsersListDto
+            .Select(u => new UserListItemViewModel
             {
                 Id = u.Id,
                 UserName = u.UserName!,
