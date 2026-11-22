@@ -2,6 +2,7 @@ namespace PodrozeMaleIDuze.Models.ViewModels.Map;
 
 public class MapViewModel
 {
-    // Miasta, którymi zarządza zalogowany admin miasta (puste dla pozostałych ról).
-    public List<string> ManagedCities { get; set; } = new();
+    // Miasto, którym zarządza zalogowany admin miasta (jeden admin = jedno miasto,
+    // tak jak ApplicationUser.ManagedCityId). Null dla pozostałych ról.
+    public string? ManagedCity { get; set; }
 }

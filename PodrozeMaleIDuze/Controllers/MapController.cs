@@ -10,9 +10,9 @@ public class MapController : Controller
     {
         var model = new MapViewModel();
 
-        // TODO(backend): pobrać miasta z ApplicationUser.ManagedCity zalogowanego admina miasta
+        // TODO(backend): pobrać miasto z ApplicationUser.ManagedCity zalogowanego admina miasta
         if (User.IsInRole(Roles.CityAdmin))
-            model.ManagedCities = ["Białystok"];
+            model.ManagedCity = "Białystok";
 
         return View(model);
     }
