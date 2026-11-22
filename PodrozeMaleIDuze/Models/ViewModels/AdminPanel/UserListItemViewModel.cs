@@ -1,6 +1,6 @@
-﻿namespace PodrozeMaleIDuze.DTO.Response.Users;
+﻿namespace PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
 
-public class UsersListDto
+public class UserListItemViewModel
 {
     public string Id { get; set; } = string.Empty;
 
