@@ -28,4 +28,35 @@ public class AdminPanelController(IAdminUserService adminUserService) : Controll
 
         return View(model);
     }
+
+    // POST /AdminPanel/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(CreateUserViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var result = await adminUserService.CreateUserAsync(model);
+            if (result.Succeeded)
+            {
+                TempData["Success"] = $"Utworzono konto {model.UserName}.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(string.Empty, error.Description);
+        }
+
+        return await ShowPanelWithCreateErrors(model);
+    }
+
+    private async Task<IActionResult> ShowPanelWithCreateErrors(CreateUserViewModel model)
+    {
+        var panel = await adminUserService.GetPanelAsync();
+        model.AvailableCities = panel.NewUser.AvailableCities;
+        panel.NewUser = model;
+
+        ViewData["OpenDrawer"] = true;
+        return View(nameof(Index), panel);
+    }
 }

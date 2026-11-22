@@ -1,4 +1,5 @@
-﻿using PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
+﻿using Microsoft.AspNetCore.Identity;
+using PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
 
 namespace PodrozeMaleIDuze.Services.AdminUser;
 
@@ -9,4 +10,6 @@ public interface IAdminUserService
     Task<AdminPanelViewModel> GetPanelAsync();
 
     Task<UserDetailsViewModel?> GetUserDetailsAsync(string id);
+
+    Task<IdentityResult> CreateUserAsync(CreateUserViewModel model);
 }

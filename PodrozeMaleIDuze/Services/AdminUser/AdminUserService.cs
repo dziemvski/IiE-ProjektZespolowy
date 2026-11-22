@@ -106,6 +106,48 @@ public class AdminUserService(UserManager<ApplicationUser> userManager, AppDbCon
         };
     }
 
+    public async Task<IdentityResult> CreateUserAsync(CreateUserViewModel model)
+    {
+        if (!Roles.All.Contains(model.Role))
+            return Failed("Wybrano nieznaną rolę.");
+
+        if (model.Role == Roles.CityAdmin)
+        {
+            if (model.CityId is null)
+                return Failed("Wybierz miasto dla admina miasta.");
+
+            if (!await context.Cities.AnyAsync(c => c.Id == model.CityId))
+                return Failed("Wybrane miasto nie istnieje.");
+        }
+
+        var user = new ApplicationUser
+        {
+            UserName = model.UserName.Trim(),
+            Email = model.Email.Trim(),
+            EmailConfirmed = true,
+            FirstName = model.FirstName.Trim(),
+            LastName = model.LastName.Trim(),
+            DateOfBirth = DateOnly.FromDateTime(model.DateOfBirth!.Value),
+            ManagedCityId = model.Role == Roles.CityAdmin ? model.CityId : null
+        };
+
+        var createResult = await userManager.CreateAsync(user, model.Password);
+        if (!createResult.Succeeded)
+            return createResult;
+
+        var roleResult = await userManager.AddToRoleAsync(user, model.Role);
+        if (!roleResult.Succeeded)
+        {
+            await userManager.DeleteAsync(user);
+            return roleResult;
+        }
+
+        return IdentityResult.Success;
+    }
+
+    private static IdentityResult Failed(string message) =>
+        IdentityResult.Failed(new IdentityError { Description = message });
+
     private static bool IsEnabled(ApplicationUser user) =>
         user.LockoutEnd is null || user.LockoutEnd <= DateTimeOffset.UtcNow;
 }
