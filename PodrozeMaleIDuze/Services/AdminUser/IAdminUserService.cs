@@ -12,4 +12,6 @@ public interface IAdminUserService
     Task<UserDetailsViewModel?> GetUserDetailsAsync(string id);
 
     Task<IdentityResult> CreateUserAsync(CreateUserViewModel model);
+
+    Task<IdentityResult> UpdateUserAsync(string id, UpdateUserViewModel model, string currentUserId);
 }

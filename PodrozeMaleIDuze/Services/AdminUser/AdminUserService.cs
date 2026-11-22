@@ -38,44 +38,22 @@ public class AdminUserService(UserManager<ApplicationUser> userManager, AppDbCon
             .ToListAsync();
 
         var roleByUserId = await GetRoleByUserIdAsync();
-
-        var cities = await context.Cities
-            .AsNoTracking()
-            .OrderBy(c => c.Name)
-            .ToListAsync();
+        var cityOptions = await GetCityOptionsAsync();
 
         return new AdminPanelViewModel
         {
-            Cities = cities.Select(c => c.Name).ToList(),
-            NewUser = new CreateUserViewModel
-            {
-                AvailableCities = cities
-                    .Select(c => new SelectListItem(c.Name, c.Id.ToString()))
-                    .ToList()
-            },
+            Cities = cityOptions.Select(c => c.Text).ToList(),
+            NewUser = new CreateUserViewModel { AvailableCities = cityOptions },
             Users = users.Select(u => new AdminUserRowViewModel
             {
                 Id = u.Id,
                 UserName = u.UserName ?? string.Empty,
                 Email = u.Email ?? string.Empty,
                 Role = roleByUserId.GetValueOrDefault(u.Id, Roles.User),
-                Cities = u.ManagedCity is null ? new List<string>() : new List<string> { u.ManagedCity.Name },
+                Cities = CityNames(u),
                 IsEnabled = IsEnabled(u)
             }).ToList()
         };
-    }
-
-    private async Task<Dictionary<string, string>> GetRoleByUserIdAsync()
-    {
-        var pairs = await (
-            from userRole in context.UserRoles
-            join role in context.Roles on userRole.RoleId equals role.Id
-            select new { userRole.UserId, RoleName = role.Name! }
-        ).ToListAsync();
-
-        return pairs
-            .GroupBy(p => p.UserId)
-            .ToDictionary(g => g.Key, g => g.First().RoleName);
     }
 
     public async Task<UserDetailsViewModel?> GetUserDetailsAsync(string id)
@@ -99,26 +77,18 @@ public class AdminUserService(UserManager<ApplicationUser> userManager, AppDbCon
             LastName = user.LastName,
             DateOfBirth = user.DateOfBirth,
             Role = roles.FirstOrDefault() ?? Roles.User,
-            Cities = user.ManagedCity is null
-                ? new List<string>()
-                : new List<string> { user.ManagedCity.Name },
-            IsEnabled = IsEnabled(user)
+            Cities = CityNames(user),
+            IsEnabled = IsEnabled(user),
+            CityId = user.ManagedCityId,
+            AvailableCities = await GetCityOptionsAsync()
         };
     }
 
     public async Task<IdentityResult> CreateUserAsync(CreateUserViewModel model)
     {
-        if (!Roles.All.Contains(model.Role))
-            return Failed("Wybrano nieznaną rolę.");
-
-        if (model.Role == Roles.CityAdmin)
-        {
-            if (model.CityId is null)
-                return Failed("Wybierz miasto dla admina miasta.");
-
-            if (!await context.Cities.AnyAsync(c => c.Id == model.CityId))
-                return Failed("Wybrane miasto nie istnieje.");
-        }
+        var validation = await ValidateRoleAndCityAsync(model.Role, model.CityId);
+        if (validation is not null)
+            return validation;
 
         var user = new ApplicationUser
         {
@@ -144,6 +114,86 @@ public class AdminUserService(UserManager<ApplicationUser> userManager, AppDbCon
 
         return IdentityResult.Success;
     }
+
+    public async Task<IdentityResult> UpdateUserAsync(string id, UpdateUserViewModel model, string currentUserId)
+    {
+        if (id == currentUserId)
+            return Failed("Nie możesz zmienić własnej roli ani zablokować własnego konta.");
+
+        var user = await userManager.FindByIdAsync(id);
+        if (user is null)
+            return Failed("Nie znaleziono użytkownika.");
+
+        var validation = await ValidateRoleAndCityAsync(model.Role, model.CityId);
+        if (validation is not null)
+            return validation;
+
+        var currentRoles = await userManager.GetRolesAsync(user);
+        if (currentRoles.Count != 1 || currentRoles[0] != model.Role)
+        {
+            var removeResult = await userManager.RemoveFromRolesAsync(user, currentRoles);
+            if (!removeResult.Succeeded)
+                return removeResult;
+
+            var addResult = await userManager.AddToRoleAsync(user, model.Role);
+            if (!addResult.Succeeded)
+                return addResult;
+        }
+
+        user.ManagedCityId = model.Role == Roles.CityAdmin ? model.CityId : null;
+        var updateResult = await userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+            return updateResult;
+
+        if (model.IsEnabled)
+            return await userManager.SetLockoutEndDateAsync(user, null);
+
+        await userManager.SetLockoutEnabledAsync(user, true);
+        await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
+        return await userManager.UpdateSecurityStampAsync(user);
+    }
+
+    private async Task<Dictionary<string, string>> GetRoleByUserIdAsync()
+    {
+        var pairs = await (
+            from userRole in context.UserRoles
+            join role in context.Roles on userRole.RoleId equals role.Id
+            select new { userRole.UserId, RoleName = role.Name! }
+        ).ToListAsync();
+
+        return pairs
+            .GroupBy(p => p.UserId)
+            .ToDictionary(g => g.Key, g => g.First().RoleName);
+    }
+
+    private async Task<List<SelectListItem>> GetCityOptionsAsync()
+    {
+        return await context.Cities
+            .AsNoTracking()
+            .OrderBy(c => c.Name)
+            .Select(c => new SelectListItem(c.Name, c.Id.ToString()))
+            .ToListAsync();
+    }
+
+    private async Task<IdentityResult?> ValidateRoleAndCityAsync(string role, int? cityId)
+    {
+        if (!Roles.All.Contains(role))
+            return Failed("Wybrano nieznaną rolę.");
+
+        if (role != Roles.CityAdmin)
+            return null;
+
+        if (cityId is null)
+            return Failed("Wybierz miasto dla admina miasta.");
+
+        if (!await context.Cities.AnyAsync(c => c.Id == cityId))
+            return Failed("Wybrane miasto nie istnieje.");
+
+        return null;
+    }
+
+    private static List<string> CityNames(ApplicationUser user) =>
+        user.ManagedCity is null ? new List<string>() : new List<string> { user.ManagedCity.Name };
 
     private static IdentityResult Failed(string message) =>
         IdentityResult.Failed(new IdentityError { Description = message });

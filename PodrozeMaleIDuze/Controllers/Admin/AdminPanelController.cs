@@ -50,6 +50,35 @@ public class AdminPanelController(IAdminUserService adminUserService) : Controll
         return await ShowPanelWithCreateErrors(model);
     }
 
+    // POST /AdminPanel/Update/{id}
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Update(string id, UpdateUserViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            var result = await adminUserService.UpdateUserAsync(id, model, currentUserId);
+            if (result.Succeeded)
+            {
+                TempData["Success"] = "Zapisano zmiany.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(string.Empty, error.Description);
+        }
+
+        var details = await adminUserService.GetUserDetailsAsync(id);
+        if (details is null)
+            return NotFound();
+
+        details.Role = model.Role;
+        details.IsEnabled = model.IsEnabled;
+        details.CityId = model.CityId;
+        return View(nameof(Details), details);
+    }
+
     private async Task<IActionResult> ShowPanelWithCreateErrors(CreateUserViewModel model)
     {
         var panel = await adminUserService.GetPanelAsync();
