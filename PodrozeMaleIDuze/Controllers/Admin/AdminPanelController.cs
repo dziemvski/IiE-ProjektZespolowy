@@ -3,28 +3,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PodrozeMaleIDuze.Constants;
 using PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
+using PodrozeMaleIDuze.Services.AdminUser;
 
 namespace PodrozeMaleIDuze.Controllers.Admin;
 
 [Authorize(Roles = Roles.Admin)]
-public class AdminPanelController : Controller
+public class AdminPanelController(IAdminUserService adminUserService) : Controller
 {
     // GET /AdminPanel
     [HttpGet]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        List<string> cities = ["Białystok", "Gdańsk", "Kraków", "Warszawa"];
-
-        var model = new AdminPanelViewModel
-        {
-            Cities = cities,
-            NewUser = new CreateUserViewModel { AvailableCities = cities },
-            Users = SampleUsers().Select(u => new AdminUserRowViewModel
-            {
-                Id = u.Id, UserName = u.UserName, Email = u.Email,
-                Role = u.Role, Cities = u.Cities, IsEnabled = u.IsEnabled
-            }).ToList()
-        };
+        var model = await adminUserService.GetPanelAsync();
         return View(model);
     }
 
