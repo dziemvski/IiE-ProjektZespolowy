@@ -50,21 +50,6 @@ function setRole(role) {
 $$('#newRole button').forEach(b => b.addEventListener('click', () => setRole(b.dataset.r)));
 setRole($('#Role').value || 'User');
 
-$('#newCitySelect').addEventListener('change', e => {
-    const option = e.target.selectedOptions[0];
-    if (!option.value) return;
-    const chip = document.createElement('span');
-    chip.className = 'chip';
-    chip.append(option.value);
-    const hidden = Object.assign(document.createElement('input'), { type: 'hidden', name: 'Cities', value: option.value });
-    const remove = Object.assign(document.createElement('button'), { type: 'button', textContent: '×' });
-    remove.addEventListener('click', () => { option.hidden = false; chip.remove(); });
-    chip.append(hidden, remove);
-    $('#newCities').append(chip);
-    option.hidden = true;
-    e.target.value = '';
-});
-
 const pw = $('#Password');
 function showPassword(show) {
     pw.type = show ? 'text' : 'password';
@@ -82,7 +67,7 @@ $('#pwGen').addEventListener('click', () => {
     const chars = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!?#%';
     const pick = () => chars[crypto.getRandomValues(new Uint32Array(1))[0] % chars.length];
     let value;
-    do { value = Array.from({ length: 12 }, pick).join(''); } while (!/\d/.test(value) || !/[a-z]/i.test(value));
+    do { value = Array.from({ length: 12 }, pick).join(''); } while (!/\d/.test(value) || !/[a-z]/.test(value));
     pw.value = value;
     showPassword(true);
     pw.dispatchEvent(new Event('input'));
