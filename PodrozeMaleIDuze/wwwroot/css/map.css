@@ -207,6 +207,7 @@ input, select, textarea {
 .pop p {
     margin: 6px 0;
 }
+
 .map-brand {
     position: absolute;
     top: 20px;
@@ -768,4 +769,10 @@ input, select, textarea {
         margin: 0 -16px;
         padding: 2px 16px 10px;
     }
+}
+
+.mini-card .ill svg {
+    width: 80%;
+    max-height: 64px;
+    stroke: currentColor;
 }
