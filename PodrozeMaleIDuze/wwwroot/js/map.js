@@ -119,6 +119,105 @@ const places = [
         lat: 52.2325,
         lon: 20.9810,
         desc: 'Interaktywne muzeum poświęcone powstaniu z 1944 roku.'
+    },
+    {
+        id: 12,
+        name: 'Pałac Branickich',
+        cat: 'Zabytki',
+        city: 'Białystok',
+        region: 'podlaskie',
+        lat: 53.1290,
+        lon: 23.1640,
+        pop: 98,
+        desc: 'Barokowa rezydencja hetmana Jana Klemensa Branickiego, zwana Wersalem Podlasia.'
+    },
+    {
+        id: 13,
+        name: 'Muzeum Pamięci Sybiru',
+        cat: 'Muzea',
+        city: 'Białystok',
+        region: 'podlaskie',
+        lat: 53.1373,
+        lon: 23.1474,
+        pop: 81,
+        desc: 'Muzeum poświęcone losom Polaków zesłanych na Syberię.'
+    },
+    {
+        id: 14,
+        name: 'Rynek Kościuszki i Ratusz',
+        cat: 'Miasta',
+        city: 'Białystok',
+        region: 'podlaskie',
+        lat: 53.1323,
+        lon: 23.1590,
+        pop: 77,
+        desc: 'Serce miasta z odbudowanym ratuszem, w którym mieści się Muzeum Podlaskie.'
+    },
+    {
+        id: 15,
+        name: 'Tykocin — zamek i synagoga',
+        cat: 'Zabytki',
+        city: 'Tykocin',
+        region: 'podlaskie',
+        lat: 53.2050,
+        lon: 22.7740,
+        pop: 90,
+        desc: 'Miasteczko nad Narwią z odbudowanym zamkiem i Wielką Synagogą.'
+    },
+    {
+        id: 16,
+        name: 'Monaster w Supraślu',
+        cat: 'Zabytki',
+        city: 'Supraśl',
+        region: 'podlaskie',
+        lat: 53.2100,
+        lon: 23.3370,
+        pop: 64,
+        desc: 'Klasztor prawosławny z Muzeum Ikon.'
+    },
+    {
+        id: 17,
+        name: 'Narwiański Park Narodowy',
+        cat: 'Natura',
+        city: 'Kurowo',
+        region: 'podlaskie',
+        lat: 52.9900,
+        lon: 22.6900,
+        pop: 72,
+        desc: 'Bagienna dolina Narwi nazywana polską Amazonią.'
+    },
+    {
+        id: 18,
+        name: 'Puszcza Knyszyńska',
+        cat: 'Natura',
+        city: 'Supraśl',
+        region: 'podlaskie',
+        lat: 53.2600,
+        lon: 23.4300,
+        pop: 55,
+        desc: 'Rozległy kompleks leśny z licznymi szlakami pieszymi i rowerowymi.'
+    },
+    {
+        id: 19,
+        name: 'Zalew Dojlidy',
+        cat: 'Woda',
+        city: 'Białystok',
+        region: 'podlaskie',
+        lat: 53.1100,
+        lon: 23.2050,
+        pop: 47,
+        desc: 'Kąpielisko i tereny rekreacyjne na skraju miasta.'
+    },
+    {
+        id: 20,
+        name: 'Pałac w Choroszczy',
+        cat: 'Muzea',
+        city: 'Choroszcz',
+        region: 'podlaskie',
+        lat: 53.1450,
+        lon: 22.9850,
+        pop: 38,
+        desc: 'Letnia rezydencja Branickich, dziś Muzeum Wnętrz Pałacowych.'
     }
 ];
 
@@ -135,6 +234,13 @@ const qEl = document.getElementById('q');
 const markers = {};
 let activeCat = '';
 let query = '';
+
+const hooks = {
+    filter: () => true,
+    popup: () => {},
+    count: null,
+    afterRender: () => {}
+};
 
 function el(tag, cls, text) {
     const e = document.createElement(tag);
@@ -158,50 +264,68 @@ function makeMarker(p) {
     g.target = '_blank';
     g.rel = 'noopener';
     box.append(g);
+    hooks.popup(p, box);
     return m.bindPopup(box);
+}
+
+function dropMarker(id) {
+    if (!markers[id]) return;
+    map.removeLayer(markers[id]);
+    delete markers[id];
 }
 
 function matches(p) {
     const t = (p.name + ' ' + p.city + ' ' + p.region + ' ' + p.cat + ' ' + p.desc).toLowerCase();
-    return (!activeCat || p.cat === activeCat) && t.includes(query.toLowerCase());
+    return (!activeCat || p.cat === activeCat) && t.includes(query.toLowerCase()) && hooks.filter(p);
 }
 
 function render() {
     const shown = places.filter(matches);
     Object.values(markers).forEach(m => map.removeLayer(m));
-    listEl.replaceChildren();
     shown.forEach(p => {
         if (!markers[p.id]) markers[p.id] = makeMarker(p);
         markers[p.id].addTo(map);
-        const li = el('li', 'item');
-        const dot = el('span', 'dot');
-        dot.style.background = CATS[p.cat];
-        const box = el('div');
-        box.append(el('b', '', p.name), el('small', '', p.city + ' · ' + p.region));
-        li.append(dot, box);
-        li.onclick = () => {
-            map.flyTo([p.lat, p.lon], 9);
-            markers[p.id].openPopup();
-        };
-        listEl.append(li);
     });
-    countEl.textContent = shown.length + ' z ' + places.length + ' miejsc w Polsce';
+
+    if (listEl) {
+        listEl.replaceChildren();
+        shown.forEach(p => {
+            const li = el('li', 'item');
+            const dot = el('span', 'dot');
+            dot.style.background = CATS[p.cat];
+            const box = el('div');
+            box.append(el('b', '', p.name), el('small', '', p.city + ' · ' + p.region));
+            li.append(dot, box);
+            li.onclick = () => {
+                map.flyTo([p.lat, p.lon], 9);
+                markers[p.id].openPopup();
+            };
+            listEl.append(li);
+        });
+    }
+
+    countEl.textContent = hooks.count
+        ? hooks.count(shown)
+        : shown.length + ' z ' + places.length + ' miejsc w Polsce';
+    hooks.afterRender(shown);
 }
 
 function setCat(c) {
     activeCat = c;
-    chipsEl.querySelectorAll('.chip').forEach(b => b.classList.toggle('on', b.textContent === (c || 'Wszystkie')));
+    chipsEl.querySelectorAll('.chip').forEach(b => b.classList.toggle('on', b.dataset.cat === c));
     render();
 }
 
-const all = el('button', 'chip on', 'Wszystkie');
-all.onclick = () => setCat('');
-chipsEl.append(all);
-Object.keys(CATS).forEach(c => {
-    const b = el('button', 'chip', c);
-    b.onclick = () => setCat(c);
+function addChip(label, cat) {
+    const b = el('button', 'chip' + (cat === '' ? ' on' : ''), label);
+    b.type = 'button';
+    b.dataset.cat = cat;
+    b.onclick = () => setCat(cat);
     chipsEl.append(b);
-});
+}
+
+addChip('Wszystkie', '');
+Object.keys(CATS).forEach(c => addChip(c, c));
 qEl.oninput = () => {
     query = qEl.value;
     render();
@@ -257,4 +381,6 @@ if (form) {
     };
 }
 
-render();
+window.MapApp = {map, places, CATS, markers, hooks, el, render, dropMarker};
+
+document.addEventListener('DOMContentLoaded', render);
