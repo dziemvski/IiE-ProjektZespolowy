@@ -26,6 +26,11 @@
 
         @if (isLoggedIn)
         {
+            @if (User.IsInRole(Roles.User))
+            {
+                <a asp-controller="Trips" asp-action="Index" class="nav-pill nav-pill-outline">Moje trasy</a>
+            }
+
             @if (User.IsInRole(Roles.Admin))
             {
                 <a asp-controller="AdminPanel" asp-action="Index" class="nav-pill nav-pill-outline">Panel admina</a>
