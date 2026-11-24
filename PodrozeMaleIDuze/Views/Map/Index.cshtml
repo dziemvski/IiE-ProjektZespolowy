@@ -1,40 +1,44 @@
-﻿@using PodrozeMaleIDuze.Constants
+﻿@model PodrozeMaleIDuze.Models.ViewModels.Map.MapViewModel
 @{
     Layout = "_MapLayout";
     ViewData["Title"] = "Mapa miejsc";
-
-    var isLoggedIn = User.Identity?.IsAuthenticated == true;
-    var userName = User.Identity?.Name ?? string.Empty;
-    var initial = string.IsNullOrEmpty(userName) ? "?" : userName[..1].ToUpper();
-    var isAdmin = User.IsInRole(Roles.Admin);
-    var isCityAdmin = User.IsInRole(Roles.CityAdmin);
-    var badge = isAdmin ? "Admin" : isCityAdmin ? "Admin miasta" : null;
-    var roleName = isAdmin ? Roles.Admin : isCityAdmin ? Roles.CityAdmin : isLoggedIn ? Roles.User : "Guest";
 }
 
-@* Konfiguracja dla map.js: dane użytkownika z Identity (nie z przeglądarki) *@
 <div id="mapConfig" hidden
-     data-authenticated="@isLoggedIn.ToString().ToLower()"
-     data-username="@userName"
-     data-role="@roleName"
-     data-city=""
+     data-authenticated="@Model.IsAuthenticated.ToString().ToLower()"
+     data-username="@Model.UserName"
+     data-role="@Model.Role"
+     data-city="@Model.ManagedCity"
      data-login-url="@Url.Action("Login", "Account", new { returnUrl = Url.Action("Index", "Map") })"></div>
 
-
-<!-- mapa -->
 <section class="map-area" id="mapArea">
     <div id="map" aria-label="Mapa Polski z miejscami"></div>
 
     <a asp-controller="Home" asp-action="Index" class="back" title="Strona główna">
-        <svg viewBox="0 0 32 32" fill="none" stroke="#F8B97A" stroke-width="1.6"><circle cx="16" cy="16" r="7.5" /><ellipse cx="16" cy="16" rx="14" ry="4.6" transform="rotate(-18 16 16)" /></svg>
+        <svg viewBox="0 0 32 32" fill="none" stroke="#F8B97A" stroke-width="1.6">
+            <circle cx="16" cy="16" r="7.5"/>
+            <ellipse cx="16" cy="16" rx="14" ry="4.6" transform="rotate(-18 16 16)"/>
+        </svg>
         Podróże Małe i Duże
     </a>
 
     <span class="zoom-level" id="zoomLevel">Cała Polska</span>
     <div class="zoom">
-        <button id="zIn" aria-label="Przybliż"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg></button>
-        <button id="zOut" aria-label="Oddal"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14" /></svg></button>
-        <button id="zReset" aria-label="Pokaż okolicę"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg></button>
+        <button id="zIn" aria-label="Przybliż">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round">
+                <path d="M12 5v14M5 12h14"/>
+            </svg>
+        </button>
+        <button id="zOut" aria-label="Oddal">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round">
+                <path d="M5 12h14"/>
+            </svg>
+        </button>
+        <button id="zReset" aria-label="Pokaż okolicę">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>
+            </svg>
+        </button>
     </div>
 
     <div class="legend" id="legend"></div>
@@ -44,25 +48,28 @@
     <article class="sheet" id="sheet" aria-hidden="true">
         <div class="photos" id="sheetPhotos"></div>
         <div class="info stagger" id="sheetInfo"></div>
-        <button class="icon-btn" id="sheetClose" aria-label="Zamknij"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+        <button class="icon-btn" id="sheetClose" aria-label="Zamknij">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round">
+                <path d="M6 6l12 12M18 6 6 18"/>
+            </svg>
+        </button>
     </article>
 </section>
 
-<!--panel-->
 <aside class="panel">
-    @if (isLoggedIn)
+    @if (Model.IsAuthenticated)
     {
         <div class="who">
-            <span class="av">@initial</span>
+            <span class="av">@Model.Initial</span>
             <span class="grow">
                 <b>
-                    @userName
-                    @if (badge is not null)
+                    @Model.UserName
+                    @if (Model.Badge is not null)
                     {
-                        <span class="role-badge">@badge</span>
+                        <span class="role-badge">@Model.Badge</span>
                     }
                 </b>
-                <small>Zalogowano</small>
+                <small>@Model.Subtitle</small>
             </span>
             <form asp-controller="Account" asp-action="Logout" method="post">
                 <button type="submit" class="act">Wyloguj</button>
@@ -72,14 +79,20 @@
     else
     {
         <div class="who">
-            <span class="av"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8" r="4" /><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" /></svg></span>
+            <span class="av"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"><circle
+                        cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span>
             <span class="grow"><b>Gość</b><small>Przeglądasz bez logowania</small></span>
-            <a class="act" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Index", "Map")">Zaloguj</a>
+            <a class="act" asp-controller="Account" asp-action="Login"
+               asp-route-returnUrl="@Url.Action("Index", "Map")">Zaloguj</a>
         </div>
     }
-    @if (isAdmin)
+    @if (Model.IsAdmin)
     {
-        <a class="admin-link" asp-controller="AdminPanel" asp-action="Index"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6l-8-3Z" /></svg>Panel admina</a>
+        <a class="admin-link" asp-controller="AdminPanel" asp-action="Index">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6l-8-3Z"/>
+            </svg>
+            Panel admina</a>
     }
 
     <h1>Mapa miejsc</h1>
@@ -88,7 +101,12 @@
     <div class="section admin">
         <div class="section-head"><h3>Zarządzanie</h3><span id="scopeNote">tylko administrator</span></div>
         <div class="admin-box">
-            <button class="btn dark" id="addBtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>Dodaj miejsce</button>
+            <button class="btn dark" id="addBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Dodaj miejsce
+            </button>
             <div class="form" id="formWrap">
                 <div>
                     <form id="placeForm" novalidate>
@@ -97,7 +115,8 @@
                             <label>Kategoria<select name="category" id="fCat"></select></label>
                             <label>Województwo<select name="region" id="fRegion"></select></label>
                         </div>
-                        <label id="cityLabel">Miasto<input name="city" maxlength="100" placeholder="np. Pszczyna"></label>
+                        <label id="cityLabel">Miasto<input name="city" maxlength="100"
+                                                           placeholder="np. Pszczyna"></label>
                         <label>Opis<textarea name="desc" maxlength="1000" placeholder="Krótki opis miejsca…"></textarea></label>
                         <div class="two">
                             <label>Szerokość (lat)<input name="lat" inputmode="decimal" placeholder="49.98"></label>
@@ -105,7 +124,14 @@
                         </div>
                         <p class="err" id="formErr"></p>
                         <div class="bar">
-                            <button type="button" class="btn" id="pickBtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-6.2-6-11a6 6 0 0 1 12 0c0 4.8-6 11-6 11Z" /><circle cx="12" cy="10" r="2" /></svg>Wskaż na mapie</button>
+                            <button type="button" class="btn" id="pickBtn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="M12 21s-6-6.2-6-11a6 6 0 0 1 12 0c0 4.8-6 11-6 11Z"/>
+                                    <circle cx="12" cy="10" r="2"/>
+                                </svg>
+                                Wskaż na mapie
+                            </button>
                             <button type="submit" class="btn dark" id="saveBtn">Zapisz</button>
                             <button type="button" class="btn" id="cancelBtn">Anuluj</button>
                         </div>
@@ -124,18 +150,28 @@
         </div>
         <div class="loc-row">
             <select id="locSel" aria-label="Wybierz miasto"></select>
-            <div class="seg" id="radiusSeg"><button data-r="25">25 km</button><button data-r="50" class="on">50 km</button></div>
+            <div class="seg" id="radiusSeg">
+                <button data-r="25">25 km</button>
+                <button data-r="50" class="on">50 km</button>
+            </div>
         </div>
     </div>
 
     <div class="search">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6.5" /><path d="m20 20-4.2-4.2" /></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round">
+            <circle cx="11" cy="11" r="6.5"/>
+            <path d="m20 20-4.2-4.2"/>
+        </svg>
         <input id="q" type="text" placeholder="Szukaj: natura, góry, zamki, Kraków…" autocomplete="off">
         <button class="clear" id="qClear" aria-label="Wyczyść">✕</button>
     </div>
     <div class="chips" id="chips"></div>
 
-    <div class="results" id="results"><div><ul id="resultList"></ul></div></div>
+    <div class="results" id="results">
+        <div>
+            <ul id="resultList"></ul>
+        </div>
+    </div>
 
     <div class="section">
         <div class="section-head"><h3>Najpopularniejsze w okolicy</h3><span>przewiń →</span></div>
@@ -151,16 +187,27 @@
 <div class="gallery" id="gallery" aria-hidden="true">
     <div class="g-top">
         <span><b id="gTitle"></b> · <span id="gCount"></span></span>
-        <button id="gClose" aria-label="Zamknij galerię"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+        <button id="gClose" aria-label="Zamknij galerię">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round">
+                <path d="M6 6l12 12M18 6 6 18"/>
+            </svg>
+        </button>
     </div>
     <div class="g-stage">
-        <button class="g-nav prev" id="gPrev" aria-label="Poprzednie"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
+        <button class="g-nav prev" id="gPrev" aria-label="Poprzednie">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round">
+                <path d="M15 6l-6 6 6 6"/>
+            </svg>
+        </button>
         <img id="gImg" alt="">
-        <button class="g-nav next" id="gNext" aria-label="Następne"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M9 6l6 6-6 6" /></svg></button>
+        <button class="g-nav next" id="gNext" aria-label="Następne">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round">
+                <path d="M9 6l6 6-6 6"/>
+            </svg>
+        </button>
     </div>
     <div class="g-thumbs" id="gThumbs"></div>
 </div>
-
 
 @section Scripts {
     <script src="~/data/poland-geo.js" asp-append-version="true"></script>
