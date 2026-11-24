@@ -1,6 +1,4 @@
-﻿using PodrozeMaleIDuze.Models.Entities;
-
-namespace PodrozeMaleIDuze.Models;
+﻿namespace PodrozeMaleIDuze.Models.Entities;
 
 public class SavedPlace
 {
