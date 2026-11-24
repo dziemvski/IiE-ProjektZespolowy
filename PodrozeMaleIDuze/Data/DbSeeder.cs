@@ -19,6 +19,42 @@ public static class DbSeeder
         await SeedRolesAsync(roleManager);
         await SeedAdminAsync(userManager, configuration, logger);
         await SeedCitiesAsync(context);
+        await SeedCityAdminAsync(userManager, configuration, logger);
+    }
+
+    private static async Task SeedCityAdminAsync(UserManager<ApplicationUser> userManager,
+        IConfiguration configuration, ILogger logger)
+    {
+        var email = configuration["SeedCityAdmin:Email"];
+        var password = configuration["SeedCityAdmin:Password"];
+
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            return;
+
+        var user = await userManager.FindByEmailAsync(email);
+        if (user is null)
+        {
+            user = new ApplicationUser
+            {
+                UserName = email,
+                Email = email,
+                EmailConfirmed = true,
+                FirstName = "Admin",
+                LastName = "Miasta",
+                DateOfBirth = new DateOnly(1995, 1, 1)
+            };
+
+            var createResult = await userManager.CreateAsync(user, password);
+            if (!createResult.Succeeded)
+            {
+                logger.LogWarning("Nie udało się utworzyć testowego admina miasta: {Errors}",
+                    string.Join("; ", createResult.Errors.Select(e => e.Description)));
+                return;
+            }
+        }
+
+        if (!await userManager.IsInRoleAsync(user, Roles.CityAdmin))
+            await userManager.AddToRoleAsync(user, Roles.CityAdmin);
     }
 
     private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
