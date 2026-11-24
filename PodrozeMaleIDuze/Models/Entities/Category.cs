@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using PodrozeMaleIDuze.Models.Validation;
-
-namespace PodrozeMaleIDuze.Models;
+namespace PodrozeMaleIDuze.Models.Entities;
 
 public class Category
 {
     public int Id { get; set; }
 
-    [Required, NotWhitespace]
+    [Required]
     [MaxLength(50)]
     public string Name { get; set; } = string.Empty;
 
