@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PodrozeMaleIDuze.Constants;
 using PodrozeMaleIDuze.Data;
 using PodrozeMaleIDuze.Models;
+using PodrozeMaleIDuze.Models.Entities;
 using PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
 
 namespace PodrozeMaleIDuze.Services.AdminUser;

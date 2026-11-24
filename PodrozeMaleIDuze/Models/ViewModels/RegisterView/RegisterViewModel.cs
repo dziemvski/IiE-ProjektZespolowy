@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PodrozeMaleIDuze.Models.Validation;
 
 namespace PodrozeMaleIDuze.Models.ViewModels.RegisterView;
 
@@ -11,15 +12,14 @@ public class RegisterViewModel
     public string UserName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Wpisz adres e-mail.")]
-    [System.ComponentModel.DataAnnotations.StringLength(254, ErrorMessage = "Adres e-mail może mieć maksymalnie 254 znaki.")]
+    [StringLength(254, ErrorMessage = "Adres e-mail może mieć maksymalnie 254 znaki.")]
     [EmailAddress(ErrorMessage = "To nie wygląda na adres e-mail.")]
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Wpisz hasło.")]
     [StringLength(64, MinimumLength = 8,
         ErrorMessage = "Hasło musi mieć od 8 do 64 znaków.")]
-    [RegularExpression(
-        @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$",
+    [RegularExpression(ValidationPatterns.Password,
         ErrorMessage = "Hasło musi mieć 8–64 znaków, w tym małą literę, wielką literę i cyfrę.")]
     [DataType(DataType.Password)]
     public string Password { get; set; } = string.Empty;
@@ -32,18 +32,20 @@ public class RegisterViewModel
 
     [Required(ErrorMessage = "Wpisz imię.")]
     [StringLength(50, MinimumLength = 2,
-        ErrorMessage = "Imię może mieć maksymalnie 50 znaków.")]
-    [RegularExpression(@"^[\p{L}][\p{L}\p{M} . '\u2019-]*$", ErrorMessage = "Imię może zawierać litery, spacje, apostrof i myślnik.")]
+        ErrorMessage = "Imię musi mieć od {2} do {1} znaków.")]
+    [RegularExpression(ValidationPatterns.PersonName,
+        ErrorMessage = "Imię może zawierać litery, spacje, apostrof i myślnik.")]
     public string FirstName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Wpisz nazwisko.")]
     [StringLength(80, MinimumLength = 2,
-        ErrorMessage = "Nazwisko może mieć maksymalnie 80 znaków.")]
-    [RegularExpression(@"^[\p{L}][\p{L}\p{M} . '\u2019-]*$", ErrorMessage = "Nazwisko może zawierać litery, spacje, apostrof i myślnik.")]
+        ErrorMessage = "Nazwisko musi mieć od {2} do {1} znaków.")]
+    [RegularExpression(ValidationPatterns.PersonName,
+        ErrorMessage = "Nazwisko może zawierać litery, spacje, apostrof i myślnik.")]
     public string LastName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Podaj datę urodzenia.")]
-    [PodrozeMaleIDuze.Models.Validation.ValidBirthDate]
+    [ValidBirthDate]
     [DataType(DataType.Date)]
     public DateTime? DateOfBirth { get; set; }
 

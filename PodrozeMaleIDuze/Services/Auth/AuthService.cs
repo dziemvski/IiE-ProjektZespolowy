@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using PodrozeMaleIDuze.Models;
+using PodrozeMaleIDuze.Models.Entities;
 
 namespace PodrozeMaleIDuze.Services.Auth;
 
