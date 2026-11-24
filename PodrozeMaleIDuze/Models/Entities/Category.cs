@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PodrozeMaleIDuze.Models;
+namespace PodrozeMaleIDuze.Models.Entities;
 
 public class Category
 {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace PodrozeMaleIDuze.Models;
+namespace PodrozeMaleIDuze.Models.Entities;
 
 public class ApplicationUser : IdentityUser
 {

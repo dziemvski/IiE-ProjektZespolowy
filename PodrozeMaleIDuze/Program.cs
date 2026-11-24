@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PodrozeMaleIDuze.Data;
 using PodrozeMaleIDuze.Models;
+using PodrozeMaleIDuze.Models.Entities;
 using PodrozeMaleIDuze.Services.AdminUser;
 using PodrozeMaleIDuze.Services.Auth;
 
@@ -16,7 +17,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         options.User.RequireUniqueEmail = true;
         options.Password.RequiredLength = 8;
         options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequireUppercase = false;
+        options.Password.RequireUppercase = true;
     })
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders()

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PodrozeMaleIDuze.Models;
+using PodrozeMaleIDuze.Models.Entities;
 
 namespace PodrozeMaleIDuze.Data;
 

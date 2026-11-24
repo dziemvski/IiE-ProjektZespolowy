@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Rejestracja";
     Layout = "_AuthLayout";
+    var minBirthDate = new DateOnly(1900, 1, 1).ToString("yyyy-MM-dd");
+    var maxBirthDate = DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd");
 }
 
 <form asp-controller="Account"
@@ -77,7 +79,7 @@
 
             <input asp-for="Password"
                    type="password"
-                   placeholder="min. 8 znaków, litera i cyfra"
+                   placeholder="min. 8 znaków, wielka i mała litera, cyfra"
                    autocomplete="new-password"/>
 
             <button type="button"
@@ -97,7 +99,7 @@
                 <span id="passwordStrengthBar"></span>
             </div>
             <small id="passwordStrengthText">
-                Min. 8 znaków, w tym litera i cyfra.
+                Min. 8 znaków, w tym wielka i mała litera oraz cyfra.
             </small>
         </div>
 
@@ -165,6 +167,8 @@
             <div class="input">
                 <input asp-for="DateOfBirth"
                        type="date"
+                       min="@minBirthDate"
+                       max="@maxBirthDate"
                        autocomplete="bday"/>
             </div>
             <span asp-validation-for="DateOfBirth"></span>

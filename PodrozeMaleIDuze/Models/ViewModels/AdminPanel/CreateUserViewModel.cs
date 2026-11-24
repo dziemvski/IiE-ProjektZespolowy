@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PodrozeMaleIDuze.Models.Validation;
 
 namespace PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
 
@@ -11,27 +12,35 @@ public class CreateUserViewModel
     public string UserName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Wpisz adres e-mail.")]
+    [StringLength(254, ErrorMessage = "Adres e-mail może mieć maksymalnie 254 znaki.")]
     [EmailAddress(ErrorMessage = "To nie wygląda na adres e-mail.")]
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Wpisz imię.")]
-    [StringLength(50, ErrorMessage = "Imię może mieć maksymalnie 50 znaków.")]
+    [StringLength(50, MinimumLength = 2, ErrorMessage = "Imię musi mieć od {2} do {1} znaków.")]
+    [RegularExpression(ValidationPatterns.PersonName,
+        ErrorMessage = "Imię może zawierać litery, spacje, apostrof i myślnik.")]
     public string FirstName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Wpisz nazwisko.")]
-    [StringLength(80, ErrorMessage = "Nazwisko może mieć maksymalnie 80 znaków.")]
+    [StringLength(80, MinimumLength = 2, ErrorMessage = "Nazwisko musi mieć od {2} do {1} znaków.")]
+    [RegularExpression(ValidationPatterns.PersonName,
+        ErrorMessage = "Nazwisko może zawierać litery, spacje, apostrof i myślnik.")]
     public string LastName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Podaj datę urodzenia.")]
+    [ValidBirthDate]
     [DataType(DataType.Date)]
     public DateTime? DateOfBirth { get; set; }
 
     [Required(ErrorMessage = "Wpisz hasło startowe.")]
-    [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d).{8,64}$",
-        ErrorMessage = "Hasło musi mieć min. 8 znaków, literę i cyfrę.")]
+    [RegularExpression(ValidationPatterns.Password,
+        ErrorMessage = "Hasło musi mieć 8–64 znaków, małą literę, wielką literę i cyfrę.")]
     public string Password { get; set; } = string.Empty;
 
-    [Required] public string Role { get; set; } = "User";
+    [Required(ErrorMessage = "Wybierz rolę.")]
+    [RegularExpression(ValidationPatterns.Role, ErrorMessage = "Wybierz prawidłową rolę.")]
+    public string Role { get; set; } = "User";
 
     public int? CityId { get; set; }
 

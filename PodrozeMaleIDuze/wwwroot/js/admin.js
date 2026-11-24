@@ -78,7 +78,7 @@ $('#pwGen').addEventListener('click', () => {
     let value;
     do {
         value = Array.from({length: 12}, pick).join('');
-    } while (!/\d/.test(value) || !/[a-z]/.test(value));
+    } while (!/\d/.test(value) || !/[a-z]/.test(value) || !/[A-Z]/.test(value));
     pw.value = value;
     showPassword(true);
     pw.dispatchEvent(new Event('input'));
