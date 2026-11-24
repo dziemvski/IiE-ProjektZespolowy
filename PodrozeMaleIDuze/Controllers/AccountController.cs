@@ -44,11 +44,11 @@ public class AccountController(IAuthService authService) : Controller
         if (result.IsLockedOut)
         {
             ModelState.AddModelError(string.Empty,
-                "Konto zostało tymczasowo zablokowane po kilku nieudanych próbach. Spróbuj za kilka minut.");
+                "Konto jest zablokowane. Spróbuj ponownie później lub skontaktuj się z administratorem.");
             return View(model);
         }
 
-        ModelState.AddModelError(string.Empty, "Nieprawidłowy login lub hasło.");
+        ModelState.AddModelError(string.Empty, "Nieprawidłowy e-mail lub hasło.");
         return View(model);
     }
 
