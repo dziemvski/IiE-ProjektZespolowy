@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PodrozeMaleIDuze.Models.Validation;
 
 namespace PodrozeMaleIDuze.Models.ViewModels.AdminPanel;
 
@@ -16,24 +17,29 @@ public class CreateUserViewModel
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Wpisz imię.")]
-    [StringLength(50, ErrorMessage = "Imię może mieć maksymalnie 50 znaków.")]
+    [StringLength(50, MinimumLength = 2, ErrorMessage = "Imię musi mieć od {2} do {1} znaków.")]
+    [RegularExpression(ValidationPatterns.PersonName,
+        ErrorMessage = "Imię może zawierać litery, spacje, apostrof i myślnik.")]
     public string FirstName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Wpisz nazwisko.")]
-    [StringLength(80, ErrorMessage = "Nazwisko może mieć maksymalnie 80 znaków.")]
+    [StringLength(80, MinimumLength = 2, ErrorMessage = "Nazwisko musi mieć od {2} do {1} znaków.")]
+    [RegularExpression(ValidationPatterns.PersonName,
+        ErrorMessage = "Nazwisko może zawierać litery, spacje, apostrof i myślnik.")]
     public string LastName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Podaj datę urodzenia.")]
+    [ValidBirthDate]
     [DataType(DataType.Date)]
     public DateTime? DateOfBirth { get; set; }
 
     [Required(ErrorMessage = "Wpisz hasło startowe.")]
-    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$",
+    [RegularExpression(ValidationPatterns.Password,
         ErrorMessage = "Hasło musi mieć 8–64 znaków, małą literę, wielką literę i cyfrę.")]
     public string Password { get; set; } = string.Empty;
 
-    [Required]
-    [RegularExpression(@"^(Admin|CityAdmin|User)$", ErrorMessage = "Wybierz prawidłową rolę.")]
+    [Required(ErrorMessage = "Wybierz rolę.")]
+    [RegularExpression(ValidationPatterns.Role, ErrorMessage = "Wybierz prawidłową rolę.")]
     public string Role { get; set; } = "User";
 
     public int? CityId { get; set; }
