@@ -18,11 +18,12 @@ public static class DbSeeder
         await context.Database.MigrateAsync();
         await SeedRolesAsync(roleManager);
         await SeedAdminAsync(userManager, configuration, logger);
-        await SeedCityAdminAsync(userManager, configuration, logger);
+        await SeedCitiesAsync(context);
+        await SeedCityAdminAsync(userManager, context, configuration, logger);
     }
 
     private static async Task SeedCityAdminAsync(UserManager<ApplicationUser> userManager,
-        IConfiguration configuration, ILogger logger)
+        AppDbContext context, IConfiguration configuration, ILogger logger)
     {
         var email = configuration["SeedCityAdmin:Email"];
         var password = configuration["SeedCityAdmin:Password"];
@@ -54,6 +55,16 @@ public static class DbSeeder
 
         if (!await userManager.IsInRoleAsync(user, Roles.CityAdmin))
             await userManager.AddToRoleAsync(user, Roles.CityAdmin);
+
+        if (user.ManagedCityId is null)
+        {
+            var city = await context.Cities.FirstOrDefaultAsync(c => c.Name == "Białystok");
+            if (city is not null)
+            {
+                user.ManagedCityId = city.Id;
+                await userManager.UpdateAsync(user);
+            }
+        }
     }
 
     private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
@@ -120,5 +131,20 @@ public static class DbSeeder
             var errors = string.Join("; ", result.Errors.Select(e => e.Description));
             throw new InvalidOperationException($"{message}: {errors}");
         }
+    }
+
+    private static async Task SeedCitiesAsync(AppDbContext context)
+    {
+        if (await context.Cities.AnyAsync())
+            return;
+
+        context.Cities.AddRange(
+            new City { Name = "Białystok", Region = "podlaskie" },
+            new City { Name = "Gdańsk", Region = "pomorskie" },
+            new City { Name = "Kraków", Region = "małopolskie" },
+            new City { Name = "Warszawa", Region = "mazowieckie" },
+            new City { Name = "Wrocław", Region = "dolnośląskie" });
+
+        await context.SaveChangesAsync();
     }
 }

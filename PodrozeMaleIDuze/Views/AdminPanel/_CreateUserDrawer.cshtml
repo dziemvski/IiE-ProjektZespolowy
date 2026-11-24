@@ -1,7 +1,8 @@
 @model PodrozeMaleIDuze.Models.ViewModels.AdminPanel.CreateUserViewModel
 
 <div class="drawer-bg" id="drawerBg"></div>
-<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true"
+       data-open="@(ViewData["OpenDrawer"] is true ? "true" : "false")">
     <div class="drawer-head">
         <div><p class="eyebrow">Nowe konto</p>
             <h2 id="drawerTitle">Utwórz użytkownika</h2></div>
@@ -13,6 +14,7 @@
     </div>
 
     <form id="userForm" asp-controller="AdminPanel" asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="form-errors" role="alert"></div>
         <label class="fld"><span>Nazwa użytkownika</span>
             <input asp-for="UserName" maxlength="30" autocomplete="off" spellcheck="false"
                    placeholder="np. jan.kowalski">
@@ -23,6 +25,18 @@
             <input asp-for="Email" type="email" maxlength="120" autocomplete="off"
                    placeholder="np. jan.kowalski@gmail.com">
             <span asp-validation-for="Email"></span>
+        </label>
+        <label class="fld"><span>Imię</span>
+            <input asp-for="FirstName" maxlength="50" autocomplete="off" placeholder="np. Jan">
+            <span asp-validation-for="FirstName"></span>
+        </label>
+        <label class="fld"><span>Nazwisko</span>
+            <input asp-for="LastName" maxlength="80" autocomplete="off" placeholder="np. Kowalski">
+            <span asp-validation-for="LastName"></span>
+        </label>
+        <label class="fld"><span>Data urodzenia</span>
+            <input asp-for="DateOfBirth" type="date">
+            <span asp-validation-for="DateOfBirth"></span>
         </label>
         <div class="fld"><span>Hasło startowe</span>
             <div class="pw">
@@ -44,17 +58,11 @@
             </div>
             <p class="role-desc" id="roleDesc"></p>
         </div>
-        <div class="fld" id="newCitiesWrap" hidden><span>Miasta admina</span>
-            <div class="cities">
-                <span id="newCities"></span>
-                <select class="add-city" id="newCitySelect" aria-label="Dodaj miasto">
-                    <option value="">+ Dodaj miasto</option>
-                    @foreach (var city in Model.AvailableCities)
-                    {
-                        <option>@city</option>
-                    }
-                </select>
-            </div>
+        <div class="fld" id="newCitiesWrap" hidden><span>Miasto admina</span>
+            <select asp-for="CityId" asp-items="Model.AvailableCities" class="role">
+                <option value="">Wybierz miasto</option>
+            </select>
+            <span asp-validation-for="CityId"></span>
         </div>
     </form>
 
