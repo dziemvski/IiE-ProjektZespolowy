@@ -30,18 +30,19 @@
         let punkty = 0;
 
         if (wartosc.length >= 8) punkty++;
-        if (/[A-Za-z]/.test(wartosc)) punkty++;
+        if (/[a-z]/.test(wartosc) && /[A-Z]/.test(wartosc)) punkty++;
         if (/\d/.test(wartosc)) punkty++;
         if (wartosc.length >= 12) punkty++;
 
         const poprawne =
             wartosc.length >= 8 &&
-            /[A-Za-z]/.test(wartosc) &&
+            /[a-z]/.test(wartosc) &&
+            /[A-Z]/.test(wartosc) &&
             /\d/.test(wartosc);
 
         if (wartosc.length === 0) {
             pasek.style.width = "0";
-            opis.textContent = "Min. 8 znaków, w tym litera i cyfra.";
+            opis.textContent = "Min. 8 znaków, w tym wielka i mała litera oraz cyfra.";
         } else if (!poprawne) {
             pasek.style.width = `${Math.max(punkty, 1) * 25}%`;
             pasek.style.background = "#C2604F";
