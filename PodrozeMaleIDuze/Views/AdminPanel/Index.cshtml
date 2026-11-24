@@ -22,6 +22,10 @@
     <h1>Panel admina</h1>
     <p class="lead">Nadawaj role użytkownikom i przypisuj adminom miast miasta, w których mogą dodawać i edytować
         miejsca.</p>
+    @if (TempData["Success"] is string successMessage)
+    {
+        <p class="flash" role="status">@successMessage</p>
+    }
 
     <div class="stats">
         <div class="stat"><b>@Model.Users.Count</b><span>kont łącznie</span></div>
@@ -79,7 +83,6 @@
                             <small>@user.Email</small>
                         </div>
                     </div>
-                    // TODO(backend): obsłużyć użytkownika bez roli lub z nieznaną rolą (etykieta w Index.cshtml)
                     <span class="role-tag">@roleLabels[user.Role]</span>
                     <div class="cities">
                         @if (user.Role == Roles.CityAdmin)
