@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PodrozeMaleIDuze.Constants;
 using PodrozeMaleIDuze.Models;
+using PodrozeMaleIDuze.Models.Entities;
 
 namespace PodrozeMaleIDuze.Data;
 
