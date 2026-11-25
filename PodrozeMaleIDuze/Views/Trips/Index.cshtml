@@ -1,5 +1,5 @@
-﻿@model PodrozeMaleIDuze.Models.ViewModels.Trips.TripsViewModel
-@using System.Text.Json
+﻿@using System.Text.Json
+@model PodrozeMaleIDuze.Models.ViewModels.Trips.TripsViewModel
 @{
     ViewData["Title"] = "Moje trasy";
     var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
@@ -7,7 +7,7 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/trips.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/trips.css" asp-append-version="true"/>
 }
 
 <div class="trips-wrapper">
@@ -16,16 +16,18 @@
     <div class="trips-top-row">
         <div>
             <h1 class="trips-h1">Moje trasy</h1>
-            <p class="trips-lead">Plany na kolejne wyjścia i trasy, które już masz za sobą. Wyznacz przejście między miejscami i pobierz trasę jako PDF.</p>
+            <p class="trips-lead">Plany na kolejne wyjścia i trasy, które już masz za sobą. Wyznacz przejście między
+                miejscami i pobierz trasę jako PDF.</p>
         </div>
-        <button type="button" class="btn-new-trip">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#F8B97A" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <button type="button" class="btn-new-trip" disabled title="Dostępne po podłączeniu backendu">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#F8B97A" stroke-width="2"
+                 stroke-linecap="round" aria-hidden="true">
                 <path d="M12 5v14M5 12h14"></path>
             </svg>
             Nowa trasa
         </button>
     </div>
-    
+
     <div class="trips-stats-grid">
         <div class="stat-box">
             <b id="stat-todo">@Model.TodoCount</b>
@@ -40,7 +42,7 @@
             <span><i class="dot dot-km"></i>przebyte na zrobionych trasach</span>
         </div>
     </div>
-    
+
     <div role="tablist" class="trips-tablist">
         <button type="button" role="tab" class="tab-btn active" data-tab="todo" id="tab-todo">
             Do zrobienia <span id="tab-todo-count">(@Model.TodoCount)</span>
@@ -49,11 +51,10 @@
             Zrobione <span id="tab-done-count">(@Model.DoneCount)</span>
         </button>
     </div>
-    
+
     <div class="trips-split">
-        <!-- Lewa kolumna: lista tras -->
         <div class="trips-list-col" id="trips-list-container"></div>
-        
+
         <section class="trip-detail-card" id="trip-detail-panel">
             <div class="detail-header">
                 <div class="detail-title-wrap">
@@ -66,15 +67,20 @@
                     <button type="button" class="mode-btn" data-mode="car">Samochód</button>
                 </div>
             </div>
-            
+
             <div class="detail-map-box">
-                <svg viewBox="0 0 600 340" preserveAspectRatio="none" width="100%" height="100%" class="detail-map-svg" aria-hidden="true">
-                    <path d="M0 70 L600 40 M0 190 L600 160 M0 290 L600 300 M90 0 L120 340 M250 0 L230 340 M400 0 L430 340 M520 0 L540 340" stroke="#FFFFFF" stroke-width="7" fill="none"></path>
+                <svg viewBox="0 0 600 340" preserveAspectRatio="none" width="100%" height="100%" class="detail-map-svg"
+                     aria-hidden="true">
+                    <path
+                        d="M0 70 L600 40 M0 190 L600 160 M0 290 L600 300 M90 0 L120 340 M250 0 L230 340 M400 0 L430 340 M520 0 L540 340"
+                        stroke="#FFFFFF" stroke-width="7" fill="none"></path>
                     <path d="M0 120 L600 110 M330 0 L320 340" stroke="#FFFFFF" stroke-width="3" fill="none"></path>
                     <rect x="140" y="215" width="70" height="55" rx="8" fill="#DCE5D3"></rect>
                     <rect x="450" y="60" width="60" height="80" rx="8" fill="#DCE5D3"></rect>
-                    <polyline id="map-line-shadow" points="" fill="none" stroke="#1C2321" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity=".12"></polyline>
-                    <polyline id="map-line-route" points="" fill="none" stroke="#E08A3C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 8"></polyline>
+                    <polyline id="map-line-shadow" points="" fill="none" stroke="#1C2321" stroke-width="9"
+                              stroke-linecap="round" stroke-linejoin="round" opacity=".12"></polyline>
+                    <polyline id="map-line-route" points="" fill="none" stroke="#E08A3C" stroke-width="4"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 8"></polyline>
                 </svg>
 
                 <div id="map-pins-layer"></div>
@@ -85,27 +91,30 @@
                 </div>
                 <span class="map-attribution">© OpenStreetMap contributors</span>
             </div>
-            
+
             <div>
                 <div class="stops-heading">Kolejność miejsc</div>
                 <ol class="stops-list" id="detail-stops-list"></ol>
             </div>
-            
+
             <div class="detail-actions">
-                <button type="button" class="btn-action-pdf">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#1C2321" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <button type="button" class="btn-action-pdf" disabled title="Dostępne po podłączeniu backendu">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#1C2321" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path>
                     </svg>
                     Pobierz PDF
                 </button>
-                <button type="button" class="btn-action-secondary">Edytuj kolejność</button>
+                <button type="button" class="btn-action-secondary" disabled title="Dostępne po podłączeniu backendu">
+                    Edytuj kolejność
+                </button>
 
-                <form asp-controller="Trips" asp-action="ToggleComplete" method="post" class="toggle-complete-form" id="toggle-complete-form">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="id" id="toggle-trip-id" value="" />
-                    <input type="hidden" name="currentTab" id="toggle-current-tab" value="todo" />
-                    <button type="submit" id="btn-toggle-complete" class="btn-action-dark">Oznacz jako zrobioną</button>
-                </form>
+                @* TODO (branch z backendem): POST /Trips/ToggleComplete z AntiForgeryToken *@
+                <div class="detail-actions-end">
+                    <button type="button" id="btn-toggle-complete" class="btn-action-dark" disabled
+                            title="Dostępne po podłączeniu backendu">Oznacz jako zrobioną
+                    </button>
+                </div>
             </div>
         </section>
     </div>

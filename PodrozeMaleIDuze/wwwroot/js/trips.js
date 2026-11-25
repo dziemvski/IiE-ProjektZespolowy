@@ -60,7 +60,7 @@
         document.getElementById("detail-name").textContent = sel.name;
         document.getElementById("detail-desc").textContent = sel.description;
 
-        const speeds = { foot: 5, bike: 15, car: 30 };
+        const speeds = {foot: 5, bike: 15, car: 30};
         const mins = Math.round((sel.km / speeds[mode]) * 60);
         const duration = mins >= 60
             ? `${Math.floor(mins / 60)} h ${mins % 60} min`
@@ -107,9 +107,6 @@
             `;
             stopsList.appendChild(li);
         });
-
-        document.getElementById("toggle-trip-id").value = sel.id;
-        document.getElementById("toggle-current-tab").value = activeTab;
 
         const toggleBtn = document.getElementById("btn-toggle-complete");
         if (sel.isCompleted) {
