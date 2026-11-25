@@ -1,6 +1,130 @@
-﻿@{ ViewData["Title"] = "Zrobione trasy"; }
+﻿@using System.Text.Json
+@model PodrozeMaleIDuze.Models.ViewModels.Trips.TripsViewModel
+@{
+    ViewData["Title"] = "Moje trasy";
+    var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    var tripsJson = JsonSerializer.Serialize(Model.Trips, jsonOptions);
+}
 
-<div class="page-placeholder">
-    <h2>Zrobione trasy</h2>
-    <p>Tu powstanie nowy widok.</p>
+@section Styles {
+    <link rel="stylesheet" href="~/css/trips.css" asp-append-version="true"/>
+}
+
+<div class="trips-wrapper">
+    <div class="trips-eyebrow">Twoje podróże</div>
+
+    <div class="trips-top-row">
+        <div>
+            <h1 class="trips-h1">Moje trasy</h1>
+            <p class="trips-lead">Plany na kolejne wyjścia i trasy, które już masz za sobą. Wyznacz przejście między
+                miejscami i pobierz trasę jako PDF.</p>
+        </div>
+        <button type="button" class="btn-new-trip" disabled title="Dostępne po podłączeniu backendu">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#F8B97A" stroke-width="2"
+                 stroke-linecap="round" aria-hidden="true">
+                <path d="M12 5v14M5 12h14"></path>
+            </svg>
+            Nowa trasa
+        </button>
+    </div>
+
+    <div class="trips-stats-grid">
+        <div class="stat-box">
+            <b id="stat-todo">@Model.TodoCount</b>
+            <span><i class="dot dot-todo"></i>do zrobienia</span>
+        </div>
+        <div class="stat-box">
+            <b id="stat-done">@Model.DoneCount</b>
+            <span><i class="dot dot-done"></i>zrobione</span>
+        </div>
+        <div class="stat-box">
+            <b id="stat-km">@Model.DoneKm.ToString("0.0").Replace('.', ',') km</b>
+            <span><i class="dot dot-km"></i>przebyte na zrobionych trasach</span>
+        </div>
+    </div>
+
+    <div role="tablist" class="trips-tablist">
+        <button type="button" role="tab" class="tab-btn active" data-tab="todo" id="tab-todo">
+            Do zrobienia <span id="tab-todo-count">(@Model.TodoCount)</span>
+        </button>
+        <button type="button" role="tab" class="tab-btn" data-tab="done" id="tab-done">
+            Zrobione <span id="tab-done-count">(@Model.DoneCount)</span>
+        </button>
+    </div>
+
+    <div class="trips-split">
+        <div class="trips-list-col" id="trips-list-container"></div>
+
+        <section class="trip-detail-card" id="trip-detail-panel">
+            <div class="detail-header">
+                <div class="detail-title-wrap">
+                    <h2 id="detail-name">—</h2>
+                    <p id="detail-desc">—</p>
+                </div>
+                <div role="group" aria-label="Sposób przejścia" class="mode-switcher">
+                    <button type="button" class="mode-btn active" data-mode="foot">Pieszo</button>
+                    <button type="button" class="mode-btn" data-mode="bike">Rower</button>
+                    <button type="button" class="mode-btn" data-mode="car">Samochód</button>
+                </div>
+            </div>
+
+            <div class="detail-map-box">
+                <svg viewBox="0 0 600 340" preserveAspectRatio="none" width="100%" height="100%" class="detail-map-svg"
+                     aria-hidden="true">
+                    <path
+                        d="M0 70 L600 40 M0 190 L600 160 M0 290 L600 300 M90 0 L120 340 M250 0 L230 340 M400 0 L430 340 M520 0 L540 340"
+                        stroke="#FFFFFF" stroke-width="7" fill="none"></path>
+                    <path d="M0 120 L600 110 M330 0 L320 340" stroke="#FFFFFF" stroke-width="3" fill="none"></path>
+                    <rect x="140" y="215" width="70" height="55" rx="8" fill="#DCE5D3"></rect>
+                    <rect x="450" y="60" width="60" height="80" rx="8" fill="#DCE5D3"></rect>
+                    <polyline id="map-line-shadow" points="" fill="none" stroke="#1C2321" stroke-width="9"
+                              stroke-linecap="round" stroke-linejoin="round" opacity=".12"></polyline>
+                    <polyline id="map-line-route" points="" fill="none" stroke="#E08A3C" stroke-width="4"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 8"></polyline>
+                </svg>
+
+                <div id="map-pins-layer"></div>
+
+                <div class="map-badges">
+                    <span class="map-badge-strong" id="detail-distance-duration">0 km · 0 min</span>
+                    <span class="map-badge-muted">trasa: OSRM / OpenStreetMap</span>
+                </div>
+                <span class="map-attribution">© OpenStreetMap contributors</span>
+            </div>
+
+            <div>
+                <div class="stops-heading">Kolejność miejsc</div>
+                <ol class="stops-list" id="detail-stops-list"></ol>
+            </div>
+
+            <div class="detail-actions">
+                <button type="button" class="btn-action-pdf" disabled title="Dostępne po podłączeniu backendu">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#1C2321" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path>
+                    </svg>
+                    Pobierz PDF
+                </button>
+                <button type="button" class="btn-action-secondary" disabled title="Dostępne po podłączeniu backendu">
+                    Edytuj kolejność
+                </button>
+
+                @* TODO (branch z backendem): POST /Trips/ToggleComplete z AntiForgeryToken *@
+                <div class="detail-actions-end">
+                    <button type="button" id="btn-toggle-complete" class="btn-action-dark" disabled
+                            title="Dostępne po podłączeniu backendu">Oznacz jako zrobioną
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        window.__TRIPS_DATA__ = @Html.Raw(tripsJson);
+        window.__INITIAL_TAB__ = "@Model.ActiveTab";
+        window.__SELECTED_ID__ = @(Model.SelectedTripId.HasValue ? Model.SelectedTripId.Value.ToString() : "null");
+    </script>
+    <script src="~/js/trips.js" asp-append-version="true"></script>
+}
